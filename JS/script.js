@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Zoom chatbot (redirect to chat.html)
         if (zoomChatbot) {
             zoomChatbot.addEventListener('click', function() {
-                window.location.href = 'Page/chat.html';
+                window.location.href = 'chat.html';
             });
         }
         
@@ -190,6 +190,9 @@ document.addEventListener('DOMContentLoaded', function() {
         if (message.includes('xin chào') || message.includes('hello') || message.includes('hi')) {
             return 'Xin chào! Tôi có thể giúp gì cho bạn về Khoa Công nghệ thông tin?';
         }
+        if (message.includes('công nghệ thông tin') || message.includes('IT') || message.includes('it')) {
+            return 'Chương trình đào tạo cung cấp cho người học các kiến thức về tư duy máy tính, lập trình cơ bản, cấu trúc dữ liệu, khoa học dữ liệu, thuật toán và trí tuệ nhân tạo,… Công nghệ phần mềm, hệ thống thông tin, mạng máy tính, lập trình Web, lập trình thiết bị di động, trí tuệ nhân tạo, an toàn thông tin, điện tử và công nghệ Internet kết nối vạn vật.';
+        }
         else if (message.includes('tuyển sinh') || message.includes('đăng ký') || message.includes('nhập học')) {
             return 'Khoa CNTT tuyển sinh hàng năm thông qua các phương thức: xét tuyển điểm thi THPT Quốc gia, xét tuyển học bạ và xét tuyển thẳng đối với học sinh giỏi. Điểm chuẩn điểm thi THPT năm 2024 là 16.85 điểm và 24.0 điểm chuẩn cho xét tuyển học bạ. Bạn có thể tìm hiểu thêm tại website <a href="https://tuyensinh.ttn.edu.vn" target="_blank" style="color: #0078D7; text-decoration: underline;">tuyensinh.ttn.edu.vn</a>.';
         }
@@ -197,7 +200,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return 'Khoa CNTT đào tạo các ngành: Công nghệ thông tin, Kỹ thuật phần mềm, Hệ thống thông tin và Trí tuệ nhân tạo. Chương trình đào tạo được thiết kế theo chuẩn ACM/IEEE với 130-145 tín chỉ, bao gồm các môn cơ sở ngành và chuyên ngành, thực hành, thực tập và khóa luận tốt nghiệp.';
         }
         else if (message.includes('học phí') || message.includes('chi phí')) {
-            return 'Học phí ngành CNTT năm học 2023-2024 là 300.000đ/tín chỉ. Sinh viên học trung bình 15-18 tín chỉ mỗi học kỳ, tương đương khoảng 4.5-5.4 triệu đồng/học kỳ. Ngoài ra còn có các khoản phí khác như bảo hiểm y tế, phí ký túc xá (nếu ở).';
+            return 'Học phí ngành CNTT năm học 2024-2025 là 470.000đ/tín chỉ. Sinh viên học trung bình 15-18 tín chỉ mỗi học kỳ, tương đương khoảng 7-8.5 triệu đồng/học kỳ. Ngoài ra còn có các khoản phí khác như bảo hiểm y tế, phí ký túc xá (nếu ở).';
         }
         else if (message.includes('cơ hội việc làm') || message.includes('nghề nghiệp') || message.includes('tương lai')) {
             return 'Sinh viên tốt nghiệp từ Khoa CNTT có nhiều cơ hội việc làm tại các công ty phần mềm, công ty công nghệ, ngân hàng, và các tổ chức có bộ phận IT. Các vị trí phổ biến bao gồm: Lập trình viên, Kỹ sư phần mềm, Chuyên viên phân tích dữ liệu, Quản trị hệ thống, Chuyên gia bảo mật, và Quản lý dự án CNTT. Tỷ lệ sinh viên có việc làm sau 1 năm tốt nghiệp đạt trên 90%.';

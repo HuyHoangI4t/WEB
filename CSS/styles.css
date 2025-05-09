@@ -209,7 +209,7 @@ nav {
 
 /* Hero Section */
 .hero {
-    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://via.placeholder.com/1920x1080/0078D7/FFFFFF?text=CNTT+DHTN');
+    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://scontent.fdad7-2.fna.fbcdn.net/v/t39.30808-6/482216271_1096125082316877_7186290412864846314_n.jpg?_nc_cat=108&ccb=1-7&_nc_sid=cc71e4&_nc_eui2=AeG4oyjPYj0elTbFkJmmDrKWZJ465Q5slRBknjrlDmyVEL2HiRJQ6AFPfGqms1Eb6kVByFu-PdHdPYfeYf0nit-i&_nc_ohc=fxL2sAm4JQoQ7kNvwEtuGPG&_nc_oc=AdkhLRARaALEGtKy3dPYNNXLEfHtFuBZM9X57b_-Xsf1SMsc0sMOP4uSb0-1iHy3QW7tewyCt2OS8tPQ0-8sKy9_&_nc_zt=23&_nc_ht=scontent.fdad7-2.fna&_nc_gid=KIjFETIZPV-hBeIFm_JcIQ&oh=00_AfLqQedwCZF55RJDh8jaOcNXnFJGjfH9L2vPpBIod5Yl6Q&oe=6823733E');
     background-size: cover;
     background-position: center;
     height: 600px;
