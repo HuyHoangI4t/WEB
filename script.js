@@ -168,7 +168,7 @@ document.addEventListener('DOMContentLoaded', function() {
             messageElement.classList.add('bot-message');
             messageElement.innerHTML = `
                 <div class="message-avatar">
-                    <img src="https://ttn.edu.vn/wp-content/uploads/2022/01/logo-truong-dai-hoc-tay-nguyen.png" alt="Bot Avatar">
+                    <img src="https://inkythuatso.com/uploads/thumbnails/800/2021/12/logo-truong-dai-hoc-tay-nguyen-inkythuatso-01-27-16-02-29.jpg" alt="Bot Avatar">
                 </div>
                 <div class="message-content">
                     <p>${message}</p>
@@ -191,7 +191,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return 'Xin chào! Tôi có thể giúp gì cho bạn về Khoa Công nghệ thông tin?';
         }
         else if (message.includes('tuyển sinh') || message.includes('đăng ký') || message.includes('nhập học')) {
-            return 'Khoa CNTT tuyển sinh hàng năm thông qua các phương thức: xét tuyển điểm thi THPT Quốc gia, xét tuyển học bạ và xét tuyển thẳng đối với học sinh giỏi. Điểm chuẩn năm 2023 là 22.5 điểm cho ngành Công nghệ thông tin và 23.0 điểm cho ngành Kỹ thuật phần mềm. Bạn có thể tìm hiểu thêm tại website tuyensinh.ttn.edu.vn.';
+            return 'Khoa CNTT tuyển sinh hàng năm thông qua các phương thức: xét tuyển điểm thi THPT Quốc gia, xét tuyển học bạ và xét tuyển thẳng đối với học sinh giỏi. Điểm chuẩn điểm thi THPT năm 2024 là 16.85 điểm và 24.0 điểm chuẩn cho xét tuyển học bạ. Bạn có thể tìm hiểu thêm tại website <a href="https://tuyensinh.ttn.edu.vn" target="_blank" style="color: #0078D7; text-decoration: underline;">tuyensinh.ttn.edu.vn</a>.';
         }
         else if (message.includes('chương trình đào tạo') || message.includes('ngành học') || message.includes('môn học')) {
             return 'Khoa CNTT đào tạo các ngành: Công nghệ thông tin, Kỹ thuật phần mềm, Hệ thống thông tin và Trí tuệ nhân tạo. Chương trình đào tạo được thiết kế theo chuẩn ACM/IEEE với 130-145 tín chỉ, bao gồm các môn cơ sở ngành và chuyên ngành, thực hành, thực tập và khóa luận tốt nghiệp.';
