@@ -66,7 +66,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Zoom chatbot (redirect to chat.html)
         if (zoomChatbot) {
             zoomChatbot.addEventListener('click', function() {
-                window.location.href = 'chat.html';
+                window.location.href = 'Page/chat.html';
             });
         }
         
