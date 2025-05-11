@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khoa Khoa học Tự nhiên và Công nghệ - Ngành CNTT | Trường Đại học Tây Nguyên</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="chatbot.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header id="fixed-header">
+        <div class="top-header">
+            <div class="container">
+                <div class="logo">
+                    <a href="index.html">
+                        <img src="images/logo.png" alt="Logo Đại học Tây Nguyên">
+                    </a>
+                </div>
+                <div class="header-title">
+                    <h1>TRƯỜNG ĐẠI HỌC TÂY NGUYÊN</h1>
+                    <p>TAY NGUYEN UNIVERSITY</p>
+                </div>
+                <div class="header-right">
+                    <div class="search-box">
+                        <input type="text" placeholder="Tìm kiếm...">
+                        <button type="submit"><i class="fas fa-search"></i></button>
+                    </div>
+                    <div class="language-switch">
+                        <a href="#" class="active">VI</a>
+                        <a href="#">EN</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <nav class="main-nav">
+            <div class="container">
+                <button class="mobile-menu-btn">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="active">TRANG CHỦ</a></li>
+                    <li><a href="#">GIỚI THIỆU</a></li>
+                    <li><a href="#">TỔ CHỨC</a></li>
+                    <li><a href="#">ĐÀO TẠO</a></li>
+                    <li><a href="#">NGHIÊN CỨU</a></li>
+                    <li><a href="#">TUYỂN SINH</a></li>
+                    <li><a href="#">SINH VIÊN</a></li>
+                    <li><a href="#">HỢP TÁC</a></li>
+                    <li><a href="#">LIÊN HỆ</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb" id="fixed-breadcrumb">
+        <div class="container">
+            <ul>
+                <li><a href="index.html">Trang chủ</a></li>
+                <li><a href="#">Khoa - Đơn vị</a></li>
+                <li>Khoa Khoa học Tự nhiên và Công nghệ</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container">
+            <div class="page-content">
+                <!-- Sidebar -->
+                <aside class="sidebar">
+                    <div class="sidebar-box">
+                        <h3 class="sidebar-title">KHOA KHTN & CN</h3>
+                        <ul class="sidebar-menu">
+                            <li><a href="#">Giới thiệu</a></li>
+                            <li><a href="#">Ban lãnh đạo</a></li>
+                            <li><a href="#">Bộ môn trực thuộc</a></li>
+                            <li><a href="#">Đào tạo</a></li>
+                            <li><a href="#">Nghiên cứu khoa học</a></li>
+                            <li><a href="#">Hợp tác quốc tế</a></li>
+                            <li><a href="#">Sinh viên</a></li>
+                            <li><a href="#">Liên hệ</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="sidebar-box">
+                        <h3 class="sidebar-title">NGÀNH ĐÀO TẠO</h3>
+                        <ul class="sidebar-menu">
+                            <li><a href="#" class="active">Công nghệ thông tin</a></li>
+                            <li><a href="#">Khoa học máy tính</a></li>
+                            <li><a href="#">Kỹ thuật phần mềm</a></li>
+                            <li><a href="#">Vật lý học</a></li>
+                            <li><a href="#">Hóa học</a></li>
+                            <li><a href="#">Sinh học</a></li>
+                        </ul>
+                    </div>
+                    
+                    <div class="sidebar-box">
+                        <h3 class="sidebar-title">THÔNG BÁO</h3>
+                        <div class="sidebar-content">
+                            <div class="notice-item">
+                                <a href="#">
+                                    <h4>Thông báo lịch thi học kỳ 1 năm học 2023-2024</h4>
+                                    <span class="notice-date">15/10/2023</span>
+                                </a>
+                            </div>
+                            <div class="notice-item">
+                                <a href="#">
+                                    <h4>Thông báo về việc đăng ký học phần học kỳ 2 năm học 2023-2024</h4>
+                                    <span class="notice-date">10/10/2023</span>
+                                </a>
+                            </div>
+                            <div class="notice-item">
+                                <a href="#">
+                                    <h4>Thông báo về việc nộp học phí học kỳ 1 năm học 2023-2024</h4>
+                                    <span class="notice-date">05/10/2023</span>
+                                </a>
+                            </div>
+                            <div class="view-all">
+                                <a href="#">Xem tất cả <i class="fas fa-arrow-right"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="sidebar-box">
+                        <h3 class="sidebar-title">LIÊN KẾT NHANH</h3>
+                        <ul class="sidebar-menu">
+                            <li><a href="#"><i class="fas fa-graduation-cap"></i> Cổng thông tin sinh viên</a></li>
+                            <li><a href="#"><i class="fas fa-book"></i> Thư viện số</a></li>
+                            <li><a href="#"><i class="fas fa-envelope"></i> Email trường</a></li>
+                            <li><a href="#"><i class="fas fa-calendar-alt"></i> Lịch công tác</a></li>
+                            <li><a href="#"><i class="fas fa-file-alt"></i> Biểu mẫu - Văn bản</a></li>
+                        </ul>
+                    </div>
+                </aside>
+
+                <!-- Content -->
+                <div class="content">
+                    <h2 class="page-title">KHOA KHOA HỌC TỰ NHIÊN VÀ CÔNG NGHỆ - NGÀNH CÔNG NGHỆ THÔNG TIN</h2>
+                    
+                    <div class="department-intro">
+                        <div class="department-slider">
+                            <img src="images/cntt-banner.jpg" alt="Ngành Công nghệ thông tin" class="department-banner">
+                        </div>
+                        <div class="intro-text">
+                            <p>
+                                Ngành Công nghệ thông tin (CNTT) thuộc Khoa Khoa học Tự nhiên và Công nghệ, Trường Đại học Tây Nguyên 
+                                được thành lập từ năm 2000, là một trong những ngành đào tạo trọng điểm của nhà trường. 
+                                Với đội ngũ giảng viên có trình độ cao và cơ sở vật chất hiện đại, ngành CNTT đã và đang 
+                                đào tạo nguồn nhân lực chất lượng cao trong lĩnh vực công nghệ thông tin cho khu vực Tây Nguyên và cả nước.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h3 class="section-title">GIỚI THIỆU CHUNG</h3>
+                        <div class="section-content">
+                            <p>
+                                Khoa Khoa học Tự nhiên và Công nghệ là một trong những khoa lớn của Trường Đại học Tây Nguyên, 
+                                được thành lập trên cơ sở sáp nhập Khoa Công nghệ thông tin và Khoa Khoa học Tự nhiên. 
+                                Khoa có nhiệm vụ đào tạo nguồn nhân lực chất lượng cao trong các lĩnh vực Công nghệ thông tin, 
+                                Vật lý, Hóa học và Sinh học.
+                            </p>
+                            <p>
+                                Ngành Công nghệ thông tin là một trong những ngành đào tạo chủ lực của Khoa, 
+                                với mục tiêu đào tạo kỹ sư CNTT có kiến thức chuyên môn vững vàng, kỹ năng thực hành tốt, 
+                                khả năng nghiên cứu và phát triển ứng dụng CNTT vào thực tiễn, đáp ứng nhu cầu của xã hội 
+                                trong bối cảnh cuộc cách mạng công nghiệp 4.0.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h3 class="section-title">MỤC TIÊU ĐÀO TẠO</h3>
+                        <div class="section-content">
+                            <h4>Mục tiêu chung:</h4>
+                            <p>
+                                Đào tạo kỹ sư Công nghệ thông tin có phẩm chất chính trị, đạo đức nghề nghiệp và sức khỏe tốt; 
+                                có kiến thức cơ bản và chuyên sâu về công nghệ thông tin; có khả năng phân tích, thiết kế, 
+                                xây dựng, vận hành và phát triển các hệ thống thông tin, phần mềm máy tính, mạng máy tính và truyền thông; 
+                                có năng lực nghiên cứu khoa học và khả năng thích ứng với môi trường làm việc thay đổi.
+                            </p>
+                            
+                            <h4>Mục tiêu cụ thể:</h4>
+                            <ul class="feature-list">
+                                <li>
+                                    <strong>Về kiến thức:</strong> Trang bị cho sinh viên kiến thức cơ bản và chuyên sâu về CNTT, 
+                                    bao gồm lập trình, cơ sở dữ liệu, mạng máy tính, trí tuệ nhân tạo, an toàn thông tin, v.v.
+                                </li>
+                                <li>
+                                    <strong>Về kỹ năng:</strong> Rèn luyện cho sinh viên kỹ năng thực hành nghề nghiệp, 
+                                    kỹ năng làm việc nhóm, kỹ năng giao tiếp, kỹ năng ngoại ngữ và kỹ năng tự học suốt đời.
+                                </li>
+                                <li>
+                                    <strong>Về thái độ:</strong> Hình thành cho sinh viên thái độ làm việc nghiêm túc, 
+                                    tinh thần trách nhiệm, đạo đức nghề nghiệp và ý thức phục vụ cộng đồng.
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h3 class="section-title">CHƯƠNG TRÌNH ĐÀO TẠO</h3>
+                        <div class="section-content">
+                            <h4>Thông tin chung:</h4>
+                            <ul class="feature-list">
+                                <li><strong>Tên ngành:</strong> Công nghệ thông tin</li>
+                                <li><strong>Mã ngành:</strong> 7480201</li>
+                                <li><strong>Thời gian đào tạo:</strong> 4 năm</li>
+                                <li><strong>Hình thức đào tạo:</strong> Chính quy</li>
+                                <li><strong>Văn bằng tốt nghiệp:</strong> Kỹ sư Công nghệ thông tin</li>
+                            </ul>
+                            
+                            <h4>Cấu trúc chương trình:</h4>
+                            <table class="program-table">
+                                <tr>
+                                    <th>Khối kiến thức</th>
+                                    <th>Số tín chỉ</th>
+                                </tr>
+                                <tr>
+                                    <td>Giáo dục đại cương</td>
+                                    <td>45</td>
+                                </tr>
+                                <tr>
+                                    <td>Cơ sở ngành</td>
+                                    <td>35</td>
+                                </tr>
+                                <tr>
+                                    <td>Chuyên ngành</td>
+                                    <td>55</td>
+                                </tr>
+                                <tr>
+                                    <td>Thực tập và khóa luận tốt nghiệp</td>
+                                    <td>15</td>
+                                </tr>
+                                <tr>
+                                    <td><strong>Tổng cộng</strong></td>
+                                    <td><strong>150</strong></td>
+                                </tr>
+                            </table>
+                            
+                            <h4>Các học phần chính:</h4>
+                            <div class="course-grid">
+                                <div class="course-item">
+                                    <h5>Cơ sở ngành</h5>
+                                    <ul>
+                                        <li>Nhập môn lập trình</li>
+                                        <li>Cấu trúc dữ liệu và giải thuật</li>
+                                        <li>Kiến trúc máy tính</li>
+                                        <li>Hệ điều hành</li>
+                                        <li>Cơ sở dữ liệu</li>
+                                        <li>Mạng máy tính</li>
+                                    </ul>
+                                </div>
+                                <div class="course-item">
+                                    <h5>Chuyên ngành</h5>
+                                    <ul>
+                                        <li>Lập trình hướng đối tượng</li>
+                                        <li>Phân tích và thiết kế hệ thống</li>
+                                        <li>Công nghệ phần mềm</li>
+                                        <li>Lập trình Web</li>
+                                        <li>Trí tuệ nhân tạo</li>
+                                        <li>An toàn và bảo mật thông tin</li>
+                                    </ul>
+                                </div>
+                                <div class="course-item">
+                                    <h5>Chuyên sâu</h5>
+                                    <ul>
+                                        <li>Phát triển ứng dụng di động</li>
+                                        <li>Điện toán đám mây</li>
+                                        <li>Khai phá dữ liệu</li>
+                                        <li>Internet of Things</li>
+                                        <li>Học máy</li>
+                                        <li>Xử lý ảnh</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            
+                            <div class="download-section">
+                                <a href="#" class="download-btn"><i class="fas fa-download"></i> Tải chương trình đào tạo chi tiết</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h3 class="section-title">ĐỘI NGŨ GIẢNG VIÊN</h3>
+                        <div class="section-content">
+                            <p>
+                                Đội ngũ giảng viên ngành CNTT gồm các giảng viên có trình độ chuyên môn cao, 
+                                được đào tạo từ các trường đại học uy tín trong và ngoài nước.
+                            </p>
+                            
+                            <div class="faculty-stats">
+                                <div class="stat-item">
+                                    <div class="stat-number">25</div>
+                                    <div class="stat-label">Giảng viên</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-number">3</div>
+                                    <div class="stat-label">PGS.TS</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-number">10</div>
+                                    <div class="stat-label">Tiến sĩ</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-number">12</div>
+                                    <div class="stat-label">Thạc sĩ</div>
+                                </div>
+                            </div>
+                            
+                            <h4>Giảng viên tiêu biểu:</h4>
+                            <div class="faculty-grid">
+                                <div class="faculty-card">
+                                    <div class="faculty-image">
+                                        <img src="images/teacher1.jpg" alt="PGS.TS. Nguyễn Văn A">
+                                    </div>
+                                    <div class="faculty-info">
+                                        <h5>PGS.TS. Nguyễn Văn A</h5>
+                                        <p>Trưởng Khoa</p>
+                                        <p>Chuyên ngành: Khoa học máy tính</p>
+                                    </div>
+                                </div>
+                                <div class="faculty-card">
+                                    <div class="faculty-image">
+                                        <img src="images/teacher2.jpg" alt="TS. Trần Thị B">
+                                    </div>
+                                    <div class="faculty-info">
+                                        <h5>TS. Trần Thị B</h5>
+                                        <p>Phó Khoa</p>
+                                        <p>Chuyên ngành: Hệ thống thông tin</p>
+                                    </div>
+                                </div>
+                                <div class="faculty-card">
+                                    <div class="faculty-image">
+                                        <img src="images/teacher3.jpg" alt="TS. Lê Văn C">
+                                    </div>
+                                    <div class="faculty-info">
+                                        <h5>TS. Lê Văn C</h5>
+                                        <p>Trưởng Bộ môn CNTT</p>
+                                        <p>Chuyên ngành: Mạng máy tính</p>
+                                    </div>
+                                </div>
+                                <div class="faculty-card">
+                                    <div class="faculty-image">
+                                        <img src="images/teacher4.jpg" alt="ThS. Phạm Văn D">
+                                    </div>
+                                    <div class="faculty-info">
+                                        <h5>ThS. Phạm Văn D</h5>
+                                        <p>Giảng viên</p>
+                                        <p>Chuyên ngành: Trí tuệ nhân tạo</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="view-all-center">
+                                <a href="#" class="view-all-btn">Xem tất cả giảng viên</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h3 class="section-title">CƠ SỞ VẬT CHẤT</h3>
+                        <div class="section-content">
+                            <p>
+                                Ngành CNTT được trang bị cơ sở vật chất hiện đại, đáp ứng nhu cầu đào tạo và nghiên cứu:
+                            </p>
+                            
+                            <div class="facility-grid">
+                                <div class="facility-item">
+                                    <img src="images/lab1.jpg" alt="Phòng thực hành máy tính">
+                                    <h4>Phòng thực hành máy tính</h4>
+                                    <p>5 phòng với hơn 200 máy tính cấu hình cao, kết nối internet tốc độ cao</p>
+                                </div>
+                                <div class="facility-item">
+                                    <img src="images/lab2.jpg" alt="Phòng Lab IoT">
+                                    <h4>Phòng Lab IoT</h4>
+                                    <p>Trang bị các thiết bị hiện đại phục vụ nghiên cứu và học tập IoT</p>
+                                </div>
+                                <div class="facility-item">
+                                    <img src="images/lab3.jpg" alt="Phòng Lab AI">
+                                    <h4>Phòng Lab AI</h4>
+                                    <p>Máy chủ GPU mạnh mẽ phục vụ nghiên cứu và học tập AI, Machine Learning</p>
+                                </div>
+                                <div class="facility-item">
+                                    <img src="images/lab4.jpg" alt="Thư viện chuyên ngành">
+                                    <h4>Thư viện chuyên ngành</h4>
+                                    <p>Hàng nghìn đầu sách, tạp chí chuyên ngành CNTT trong và ngoài nước</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h3 class="section-title">NGHIÊN CỨU KHOA HỌC</h3>
+                        <div class="section-content">
+                            <p>
+                                Hoạt động nghiên cứu khoa học của ngành CNTT tập trung vào các lĩnh vực:
+                            </p>
+                            <ul class="feature-list">
+                                <li>Trí tuệ nhân tạo và học máy</li>
+                                <li>Internet of Things và điện toán đám mây</li>
+                                <li>An toàn thông tin và bảo mật mạng</li>
+                                <li>Phát triển phần mềm và ứng dụng di động</li>
+                                <li>Xử lý ảnh và thị giác máy tính</li>
+                                <li>Khai phá dữ liệu và dữ liệu lớn</li>
+                            </ul>
+                            
+                            <h4>Các đề tài nghiên cứu tiêu biểu:</h4>
+                            <div class="research-list">
+                                <div class="research-item">
+                                    <h5>Ứng dụng trí tuệ nhân tạo trong nông nghiệp thông minh tại Tây Nguyên</h5>
+                                    <p>Chủ nhiệm: TS. Nguyễn Văn A</p>
+                                    <p>Cấp: Bộ</p>
+                                    <p>Thời gian: 2021-2023</p>
+                                </div>
+                                <div class="research-item">
+                                    <h5>Nghiên cứu và phát triển hệ thống giám sát môi trường dựa trên IoT</h5>
+                                    <p>Chủ nhiệm: TS. Trần Thị B</p>
+                                    <p>Cấp: Tỉnh</p>
+                                    <p>Thời gian: 2022-2023</p>
+                                </div>
+                                <div class="research-item">
+                                    <h5>Xây dựng mô hình dự báo dịch bệnh sử dụng kỹ thuật học máy</h5>
+                                    <p>Chủ nhiệm: TS. Lê Văn C</p>
+                                    <p>Cấp: Trường</p>
+                                    <p>Thời gian: 2023</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h3 class="section-title">HỢP TÁC QUỐC TẾ</h3>
+                        <div class="section-content">
+                            <p>
+                                Ngành CNTT có quan hệ hợp tác với nhiều trường đại học và tổ chức quốc tế:
+                            </p>
+                            <ul class="feature-list">
+                                <li>Đại học Quốc gia Singapore (NUS)</li>
+                                <li>Đại học Công nghệ Nanyang (NTU), Singapore</li>
+                                <li>Đại học Khoa học và Công nghệ Hàn Quốc (KAIST)</li>
+                                <li>Đại học Công nghệ Sydney (UTS), Australia</li>
+                                <li>Tập đoàn Microsoft</li>
+                                <li>Tập đoàn IBM</li>
+                            </ul>
+                            
+                            <h4>Các chương trình hợp tác:</h4>
+                            <ul class="feature-list">
+                                <li>Trao đổi sinh viên và giảng viên</li>
+                                <li>Nghiên cứu khoa học chung</li>
+                                <li>Tổ chức hội thảo, seminar quốc tế</li>
+                                <li>Chương trình đào tạo liên kết</li>
+                                <li>Chương trình thực tập quốc tế</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h3 class="section-title">CƠ HỘI VIỆC LÀM</h3>
+                        <div class="section-content">
+                            <p>
+                                Sinh viên tốt nghiệp ngành CNTT có nhiều cơ hội việc làm với mức lương hấp dẫn tại:
+                            </p>
+                            <div class="job-grid">
+                                <div class="job-item">
+                                    <i class="fas fa-laptop-code"></i>
+                                    <h4>Lập trình viên</h4>
+                                    <p>Phát triển phần mềm, ứng dụng web, ứng dụng di động</p>
+                                </div>
+                                <div class="job-item">
+                                    <i class="fas fa-database"></i>
+                                    <h4>Chuyên viên CSDL</h4>
+                                    <p>Quản trị, phân tích và thiết kế cơ sở dữ liệu</p>
+                                </div>
+                                <div class="job-item">
+                                    <i class="fas fa-network-wired"></i>
+                                    <h4>Kỹ sư mạng</h4>
+                                    <p>Quản trị, vận hành và bảo mật hệ thống mạng</p>
+                                </div>
+                                <div class="job-item">
+                                    <i class="fas fa-project-diagram"></i>
+                                    <h4>Quản lý dự án</h4>
+                                    <p>Quản lý, điều phối các dự án CNTT</p>
+                                </div>
+                                <div class="job-item">
+                                    <i class="fas fa-shield-alt"></i>
+                                    <h4>Chuyên gia bảo mật</h4>
+                                    <p>Đảm bảo an toàn và bảo mật thông tin</p>
+                                </div>
+                                <div class="job-item">
+                                    <i class="fas fa-brain"></i>
+                                    <h4>Chuyên gia AI</h4>
+                                    <p>Nghiên cứu và phát triển các giải pháp AI</p>
+                                </div>
+                            </div>
+                            
+                            <div class="job-stats">
+                                <div class="stat-item">
+                                    <div class="stat-number">95%</div>
+                                    <div class="stat-label">Sinh viên có việc làm sau 1 năm tốt nghiệp</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-number">30%</div>
+                                    <div class="stat-label">Sinh viên làm việc tại các công ty nước ngoài</div>
+                                </div>
+                                <div class="stat-item">
+                                    <div class="stat-number">15%</div>
+                                    <div class="stat-label">Sinh viên tự khởi nghiệp</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h3 class="section-title">TUYỂN SINH</h3>
+                        <div class="section-content">
+                            <h4>Thông tin tuyển sinh năm 2023:</h4>
+                            <ul class="feature-list">
+                                <li><strong>Mã ngành:</strong> 7480201</li>
+                                <li><strong>Chỉ tiêu:</strong> 120</li>
+                                <li><strong>Tổ hợp xét tuyển:</strong>
+                                    <ul>
+                                        <li>A00: Toán, Vật lý, Hóa học</li>
+                                        <li>A01: Toán, Vật lý, Tiếng Anh</li>
+                                        <li>D01: Toán, Ngữ văn, Tiếng Anh</li>
+                                        <li>C01: Toán, Ngữ văn, Vật lý</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Điểm chuẩn năm 2022:</strong> 19.5 điểm</li>
+                            </ul>
+                            
+                            <h4>Phương thức xét tuyển:</h4>
+                            <ul class="feature-list">
+                                <li>Xét tuyển dựa trên kết quả kỳ thi tốt nghiệp THPT</li>
+                                <li>Xét tuyển dựa trên học bạ THPT</li>
+                                <li>Xét tuyển thẳng theo quy định của Bộ GD&ĐT</li>
+                            </ul>
+                            
+                            <div class="cta-box">
+                                <h4>ĐĂNG KÝ THÔNG TIN TƯ VẤN</h4>
+                                <form class="contact-form">
+                                    <div class="form-group">
+                                        <input type="text" placeholder="Họ và tên *" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="tel" placeholder="Số điện thoại *" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="email" placeholder="Email">
+                                    </div>
+                                    <div class="form-group">
+                                        <textarea placeholder="Câu hỏi của bạn"></textarea>
+                                    </div>
+                                    <button type="submit" class="btn-submit">Gửi thông tin</button>
+                                </form>
+                            </div>
+                            
+                            <div class="download-section">
+                                <a href="#" class="download-btn"><i class="fas fa-download"></i> Tải thông tin tuyển sinh chi tiết</a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h3 class="section-title">LIÊN HỆ</h3>
+                        <div class="section-content">
+                            <div class="contact-info">
+                                <p><strong>Khoa Khoa học Tự nhiên và Công nghệ</strong></p>
+                                <p><i class="fas fa-map-marker-alt"></i> Địa chỉ: Phòng A1.01, Trường Đại học Tây Nguyên, 567 Lê Duẩn, TP. Buôn Ma Thuột, Đắk Lắk</p>
+                                <p><i class="fas fa-phone"></i> Điện thoại: (0262) 3825 185</p>
+                                <p><i class="fas fa-envelope"></i> Email: khoakhtn@ttn.edu.vn</p>
+                                <p><i class="fas fa-globe"></i> Website: khtn.ttn.edu.vn</p>
+                            </div>
+                            <div class="map">
+                                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3894.6002615076376!2d108.05209731482!3d12.65460999106805!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3171f7d0e79c9487%3A0x2f24a7d5539ed5a3!2zVHLGsOG7nW5nIMSQ4bqhaSBo4buNYyBUw6J5IE5ndXnDqm4!5e0!3m2!1svi!2s!4v1652345678901!5m2!1svi!2s" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-top">
+            <div class="container">
+                <div class="footer-grid">
+                    <div class="footer-col">
+                        <h3>TRƯỜNG ĐẠI HỌC TÂY NGUYÊN</h3>
+                        <ul class="footer-info">
+                            <li><i class="fas fa-map-marker-alt"></i> 567 Lê Duẩn, TP. Buôn Ma Thuột, Đắk Lắk</li>
+                            <li><i class="fas fa-phone"></i> (0262) 3825 185</li>
+                            <li><i class="fas fa-envelope"></i> contact@ttn.edu.vn</li>
+                            <li><i class="fas fa-globe"></i> www.ttn.edu.vn</li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h3>LIÊN KẾT NHANH</h3>
+                        <ul class="footer-links">
+                            <li><a href="#">Giới thiệu</a></li>
+                            <li><a href="#">Đào tạo</a></li>
+                            <li><a href="#">Tuyển sinh</a></li>
+                            <li><a href="#">Nghiên cứu khoa học</a></li>
+                            <li><a href="#">Hợp tác quốc tế</a></li>
+                            <li><a href="#">Sinh viên</a></li>
+                        </ul>
+                    </div>
+                    <div class="footer-col">
+                        <h3>KẾT NỐI VỚI CHÚNG TÔI</h3>
+                        <div class="social-links">
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-youtube"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        </div>
+                        <h3 class="mt-4">ĐĂNG KÝ NHẬN TIN</h3>
+                        <div class="newsletter">
+                            <input type="email" placeholder="Email của bạn">
+                            <button>Đăng ký</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container">
+                <p>&copy; 2023 Trường Đại học Tây Nguyên. Tất cả quyền được bảo lưu.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Chatbot -->
+    <div class="chat-container">
+        <div class="chat-header">
+            <div class="chat-header-title">
+                <img src="images/logo.png" alt="Logo Đại học Tây Nguyên" class="chat-logo">
+                <div>
+                    <h3>Trợ lý ảo - Khoa KHTN&CN</h3>
+                    <p>Hỗ trợ thông tin 24/7</p>
+                </div>
+            </div>
+            <button class="chat-minimize-btn" id="minimizeBtn">
+                <i class="fas fa-minus"></i>
+            </button>
+        </div>
+        <div class="chat-body" id="chatBody">
+            <div class="chat-messages" id="chatMessages">
+                <div class="message bot-message">
+                    <div class="message-content">
+                        <p>Xin chào! Tôi là trợ lý ảo của Khoa Khoa học Tự nhiên và Công nghệ, Trường Đại học Tây Nguyên. Tôi có thể giúp gì cho bạn?</p>
+                    </div>
+                </div>
+                <div class="message bot-message">
+                    <div class="message-content">
+                        <p>Bạn có thể hỏi tôi về:</p>
+                        <div class="suggestion-chips">
+                            <button class="suggestion-chip" onclick="sendSuggestion('Thông tin tuyển sinh')">Thông tin tuyển sinh</button>
+                            <button class="suggestion-chip" onclick="sendSuggestion('Chương trình đào tạo')">Chương trình đào tạo</button>
+                            <button class="suggestion-chip" onclick="sendSuggestion('Cơ hội việc làm')">Cơ hội việc làm</button>
+                            <button class="suggestion-chip" onclick="sendSuggestion('Thông tin liên hệ')">Thông tin liên hệ</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="chat-footer">
+            <input type="text" id="userInput" placeholder="Nhập câu hỏi của bạn..." autocomplete="off">
+            <button id="sendBtn">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <button class="chat-toggle-btn" id="toggleBtn">
+        <i class="fas fa-comments"></i>
+    </button>
+
+    <script src="script.js"></script>
+    <script src="chatbot.js"></script>
+</body>
+</html>
