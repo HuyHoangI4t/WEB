@@ -1,38 +1,38 @@
 // Mobile Menu Toggle
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const mobileMenuBtn = document.querySelector('.mobile-menu-btn');
     const mainMenu = document.querySelector('.main-menu');
-    
+
     if (mobileMenuBtn && mainMenu) {
-        mobileMenuBtn.addEventListener('click', function() {
+        mobileMenuBtn.addEventListener('click', function () {
             mainMenu.classList.toggle('active');
         });
     }
-    
+
     // Close menu when clicking outside
-    document.addEventListener('click', function(event) {
+    document.addEventListener('click', function (event) {
         if (!event.target.closest('.mobile-menu-btn') && !event.target.closest('.main-menu')) {
             if (mainMenu && mainMenu.classList.contains('active')) {
                 mainMenu.classList.remove('active');
             }
         }
     });
-    
+
     // Smooth scrolling for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
+        anchor.addEventListener('click', function (e) {
             e.preventDefault();
-            
+
             const targetId = this.getAttribute('href');
             if (targetId === '#') return;
-            
+
             const targetElement = document.querySelector(targetId);
             if (targetElement) {
                 window.scrollTo({
                     top: targetElement.offsetTop - 80,
                     behavior: 'smooth'
                 });
-                
+
                 // Close mobile menu if open
                 if (mainMenu && mainMenu.classList.contains('active')) {
                     mainMenu.classList.remove('active');
@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     });
-    
+
     // Chatbot functionality for index.html
     const chatbotButton = document.getElementById('chatbotButton');
     const chatbotContainer = document.getElementById('chatbotContainer');
@@ -49,99 +49,99 @@ document.addEventListener('DOMContentLoaded', function() {
     const chatbotMessages = document.getElementById('chatbotMessages');
     const userInput = document.getElementById('userInput');
     const sendMessage = document.getElementById('sendMessage');
-    
+
     if (chatbotButton && chatbotContainer) {
         // Toggle chatbot
-        chatbotButton.addEventListener('click', function() {
+        chatbotButton.addEventListener('click', function () {
             chatbotContainer.style.display = chatbotContainer.style.display === 'block' ? 'none' : 'block';
         });
-        
+
         // Close chatbot
         if (closeChatbot) {
-            closeChatbot.addEventListener('click', function() {
+            closeChatbot.addEventListener('click', function () {
                 chatbotContainer.style.display = 'none';
             });
         }
-        
+
         // Zoom chatbot (redirect to chat.html)
         if (zoomChatbot) {
-            zoomChatbot.addEventListener('click', function() {
+            zoomChatbot.addEventListener('click', function () {
                 window.location.href = 'chat.html';
             });
         }
-        
+
         // Send message function
         function sendUserMessage() {
             const message = userInput.value.trim();
             if (message === '') return;
-            
+
             // Add user message to chat
             addMessage(message, 'user', chatbotMessages);
-            
+
             // Clear input
             userInput.value = '';
-            
+
             // Get bot response after a short delay
             setTimeout(() => {
                 const botResponse = getBotResponse(message);
                 addMessage(botResponse, 'bot', chatbotMessages);
             }, 600);
         }
-        
+
         // Send message on button click
         if (sendMessage) {
             sendMessage.addEventListener('click', sendUserMessage);
         }
-        
+
         // Send message on Enter key
         if (userInput) {
-            userInput.addEventListener('keypress', function(e) {
+            userInput.addEventListener('keypress', function (e) {
                 if (e.key === 'Enter') {
                     sendUserMessage();
                 }
             });
         }
     }
-    
+
     // Chatbot functionality for chat.html
     const fullpageUserInput = document.getElementById('fullpageUserInput');
     const fullpageSendMessage = document.getElementById('fullpageSendMessage');
     const fullpageChatMessages = document.getElementById('fullpageChatMessages');
     const topicButtons = document.querySelectorAll('.topic-btn');
-    
+
     if (fullpageUserInput && fullpageSendMessage && fullpageChatMessages) {
         // Send message function for fullpage chat
         function sendFullpageUserMessage() {
             const message = fullpageUserInput.value.trim();
             if (message === '') return;
-            
+
             // Add user message to chat
             addMessage(message, 'user', fullpageChatMessages);
-            
+
             // Clear input
             fullpageUserInput.value = '';
-            
+
             // Get bot response after a short delay
             setTimeout(() => {
                 const botResponse = getBotResponse(message);
                 addMessage(botResponse, 'bot', fullpageChatMessages);
             }, 600);
         }
-        
+
         // Send message on button click
         fullpageSendMessage.addEventListener('click', sendFullpageUserMessage);
-        
+
         // Send message on Enter key
-        fullpageUserInput.addEventListener('keypress', function(e) {
+        fullpageUserInput.addEventListener('keypress', function (e) {
             if (e.key === 'Enter') {
                 sendFullpageUserMessage();
             }
         });
-        
+
         // Topic buttons
         if (topicButtons.length > 0) {
             topicButtons.forEach(button => {
-                button.addEventListener('click', function() {
+                button.addEventListener('click', function () {
                     const topic = this.getAttribute('data-topic');
                     if (topic) {
                         fullpageUserInput.value = topic;
@@ -151,12 +151,12 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
     }
-    
+
     // Add message to chat
     function addMessage(message, sender, chatContainer) {
         const messageElement = document.createElement('div');
         messageElement.classList.add('message');
-        
+
         if (sender === 'user') {
             messageElement.classList.add('user-message');
             messageElement.innerHTML = `
@@ -175,17 +175,17 @@ document.addEventListener('DOMContentLoaded', function() {
                 </div>
             `;
         }
-        
+
         chatContainer.appendChild(messageElement);
-        
+
         // Scroll to bottom
         chatContainer.scrollTop = chatContainer.scrollHeight;
     }
-    
+
     // Simple bot responses based on keywords
     function getBotResponse(message) {
         message = message.toLowerCase();
-        
+
         // Common questions and responses for IT department
         if (message.includes('xin chào') || message.includes('hello') || message.includes('hi')) {
             return 'Xin chào! Tôi có thể giúp gì cho bạn về Khoa Công nghệ thông tin?';
@@ -226,23 +226,26 @@ document.addEventListener('DOMContentLoaded', function() {
         else if (message.includes('cảm ơn') || message.includes('thank')) {
             return 'Rất vui được giúp đỡ bạn! Nếu có thắc mắc gì khác về Khoa CNTT, đừng ngần ngại hỏi tôi nhé.';
         }
+        else if (message.includes('TKB') || message.includes('tkb') || message.includes('thời khóa biểu')) {
+            return 'Thời khóa biểu của được công bố trên website chính thức của Khoa tại địa chỉ <a href="https://www.ttn.edu.vn/?option=com_tnu&view=sinhvien" target="_blank" style="color: #0078D7; text-decoration: underline;">https://www.ttn.edu.vn/?option=com_tnu&view=sinhvien</a>. Bạn có nhập trực tiếp mã sinh viên để xem thời khóa biểu theo từng học kỳ.';
+        }
         else {
-            return 'Xin lỗi, tôi chưa hiểu rõ câu hỏi của bạn. Bạn có thể hỏi về thông tin tuyển sinh, chương trình đào tạo, cơ hội việc làm, học bổng, thực tập, nghiên cứu khoa học hoặc cơ sở vật chất của Khoa CNTT.';
+            return 'Xin lỗi, tôi chưa hiểu rõ câu hỏi của bạn. Bạn có thể hỏi về thông tin tuyển sinh, chương trình đào tạo, cơ hội việc làm, học bổng, thực tập, thời khoá biểu, nghiên cứu khoa học hoặc cơ sở vật chất của Khoa CNTT.';
         }
     }
-    
+
     // Form submission
     const contactForm = document.getElementById('contactForm');
     if (contactForm) {
-        contactForm.addEventListener('submit', function(e) {
+        contactForm.addEventListener('submit', function (e) {
             e.preventDefault();
-            
+
             // Simple form validation
             const name = document.getElementById('name').value;
             const email = document.getElementById('email').value;
             const subject = document.getElementById('subject').value;
             const message = document.getElementById('message').value;
-            
+
             if (name && email && subject && message) {
                 // In a real application, you would send this data to a server
                 alert('Cảm ơn bạn đã gửi tin nhắn! Chúng tôi sẽ phản hồi sớm nhất có thể.');
@@ -252,17 +255,17 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-    
+
     // Add active class to current menu item based on scroll position
     function setActiveMenu() {
         const sections = document.querySelectorAll('section[id]');
         const scrollY = window.pageYOffset;
-        
+
         sections.forEach(section => {
             const sectionHeight = section.offsetHeight;
             const sectionTop = section.offsetTop - 100;
             const sectionId = section.getAttribute('id');
-            
+
             if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
                 document.querySelector('.main-menu a[href*=' + sectionId + ']')?.classList.add('active');
             } else {
@@ -270,21 +273,21 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
-    
+
     window.addEventListener('scroll', setActiveMenu);
-    
+
     // Initialize active menu on page load
     setActiveMenu();
 });
 
 // Animation on scroll
-window.addEventListener('scroll', function() {
+window.addEventListener('scroll', function () {
     const animatedElements = document.querySelectorAll('.program-card, .news-card, .lab-card, .about-image, .about-text, .research-image, .research-text');
-    
+
     animatedElements.forEach(element => {
         const elementPosition = element.getBoundingClientRect().top;
         const screenPosition = window.innerHeight / 1.3;
-        
+
         if (elementPosition < screenPosition) {
             element.style.opacity = '1';
             element.style.transform = 'translateY(0)';
@@ -293,15 +296,15 @@ window.addEventListener('scroll', function() {
 });
 
 // Add initial animation styles
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const animatedElements = document.querySelectorAll('.program-card, .news-card, .lab-card, .about-image, .about-text, .research-image, .research-text');
-    
+
     animatedElements.forEach(element => {
         element.style.opacity = '0';
         element.style.transform = 'translateY(20px)';
         element.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
     });
-    
+
     // Trigger initial animation check
     setTimeout(() => {
         window.dispatchEvent(new Event('scroll'));
