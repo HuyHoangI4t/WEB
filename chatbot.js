@@ -1,235 +1,521 @@
-document.addEventListener('DOMContentLoaded', function () {
-    // DOM Elements
-    const chatContainer = document.querySelector('.chat-container');
-    const toggleBtn = document.getElementById('toggleBtn');
-    const minimizeBtn = document.getElementById('minimizeBtn');
-    const chatMessages = document.getElementById('chatMessages');
-    const userInput = document.getElementById('userInput');
-    const sendBtn = document.getElementById('sendBtn');
+// Xoá lịch sử chat mỗi lần reload
+localStorage.removeItem("chatHistory")
 
-    // Toggle chat window
-    toggleBtn.addEventListener('click', function () {
-        chatContainer.classList.add('active');
-        toggleBtn.classList.add('hidden');
-        scrollToBottom();
-    });
+document.addEventListener("DOMContentLoaded", () => {
+  // Chatbot elements
+  const chatbotToggle = document.querySelector(".chatbot-toggle")
+  const chatbotBox = document.querySelector(".chatbot-box")
+  const chatbotClose = document.querySelector(".chatbot-close")
+  const chatbotMessages = document.getElementById("chatbot-messages")
+  const userInput = document.getElementById("user-input")
+  const sendBtn = document.getElementById("send-btn")
+  const chatbotNotification = document.querySelector(".chatbot-notification")
 
-    // Minimize chat window
-    minimizeBtn.addEventListener('click', function () {
-        chatContainer.classList.remove('active');
-        toggleBtn.classList.remove('hidden');
-    });
+  // Default knowledge base for the chatbot
+  let knowledgeBase = {
+    "thông tin tuyển sinh": [
+      "Trường Đại học Tây Nguyên tuyển sinh các ngành đào tạo sau:",
+      "1. Công nghệ thông tin",
+      "2. Kỹ thuật phần mềm",
+      "3. Hệ thống thông tin",
+      "4. An toàn thông tin",
+      "Điểm chuẩn năm 2024 dao động từ 18-24 điểm tùy ngành. Bạn có thể tìm hiểu thêm tại website tuyển sinh của trường.",
+    ],
+    "chương trình đào tạo cntt": [
+      "Chương trình đào tạo ngành Công nghệ Thông tin bao gồm 150 tín chỉ, thời gian đào tạo 4 năm với các học phần chính:",
+      "- Lập trình cơ bản và nâng cao",
+      "- Cấu trúc dữ liệu và giải thuật",
+      "- Cơ sở dữ liệu",
+      "- Mạng máy tính",
+      "- Trí tuệ nhân tạo",
+      "- Phát triển ứng dụng web/mobile",
+      "Sinh viên sẽ được thực tập tại doanh nghiệp trong 2 học kỳ cuối.",
+    ],
+    "học phí": [
+      "Học phí năm học 2024-2025 của Trường Đại học Tây Nguyên như sau:",
+      "- Khối ngành Công nghệ thông tin: 18-20 triệu đồng/năm",
+      "- Sinh viên có thể đóng học phí theo học kỳ hoặc theo năm",
+      "- Trường có nhiều chính sách học bổng cho sinh viên xuất sắc và sinh viên có hoàn cảnh khó khăn",
+    ],
+    "cơ hội việc làm": [
+      "Sinh viên tốt nghiệp ngành CNTT có nhiều cơ hội việc làm với mức lương hấp dẫn:",
+      "- Lập trình viên (Frontend, Backend, Fullstack)",
+      "- Kỹ sư phát triển phần mềm",
+      "- Chuyên viên phân tích dữ liệu",
+      "- Chuyên viên an toàn thông tin",
+      "- Quản trị hệ thống",
+      "Tỷ lệ sinh viên có việc làm sau 3 tháng tốt nghiệp đạt trên 90%.",
+    ],
+    "giảng viên": [
+      "Bộ môn CNTT có đội ngũ giảng viên chất lượng cao:",
+      "- 5 Tiến sĩ",
+      "- 15 Thạc sĩ",
+      "- Nhiều giảng viên được đào tạo từ nước ngoài",
+      "- Có kinh nghiệm thực tế tại các doanh nghiệp công nghệ lớn",
+    ],
+    "cơ sở vật chất": [
+      "Trường Đại học Tây Nguyên có cơ sở vật chất hiện đại phục vụ đào tạo CNTT:",
+      "- 10 phòng máy tính với hơn 300 máy tính cấu hình cao",
+      "- Phòng lab IoT, AI, VR/AR",
+      "- Thư viện điện tử với hơn 50.000 đầu sách và tài liệu",
+      "- Khu ký túc xá khang trang",
+      "- Khu thể thao đa năng",
+    ],
+    "hoạt động ngoại khóa": [
+      "Sinh viên CNTT có thể tham gia nhiều hoạt động ngoại khóa:",
+      "- CLB Lập trình",
+      "- CLB Robotics",
+      "- Cuộc thi Hackathon thường niên",
+      "- Chương trình trao đổi sinh viên quốc tế",
+      "- Các hoạt động tình nguyện và trải nghiệm thực tế",
+    ],
+    "liên hệ": [
+      "Bạn có thể liên hệ với Bộ môn CNTT qua:",
+      "- Địa chỉ: Phòng A203, Tòa nhà A, Trường Đại học Tây Nguyên, 567 Lê Duẩn, TP. Buôn Ma Thuột",
+      "- Điện thoại: (0262) 3825 XXX",
+      "- Email: cntt@tnu.edu.vn",
+      "- Fanpage: facebook.com/cntt.tnu",
+    ],
+    "xin chào": [
+      "Xin chào! Tôi là TNU Assistant, trợ lý ảo của Trường Đại học Tây Nguyên. Tôi có thể giúp gì cho bạn?",
+    ],
+    "tạm biệt": ["Cảm ơn bạn đã trò chuyện! Nếu có thắc mắc gì thêm, hãy quay lại nhé. Chúc bạn một ngày tốt lành!"],
+  }
 
-    // Send message on button click
-    sendBtn.addEventListener('click', function () {
-        sendMessage();
-    });
+  // Default responses when no match is found
+  let defaultResponses = [
+    "Xin lỗi, tôi chưa hiểu câu hỏi của bạn. Bạn có thể diễn đạt theo cách khác được không?",
+    "Tôi không có thông tin về vấn đề này. Bạn có thể hỏi về thông tin tuyển sinh, chương trình đào tạo, học phí hoặc cơ hội việc làm không?",
+    "Câu hỏi của bạn nằm ngoài phạm vi kiến thức của tôi. Bạn có thể liên hệ trực tiếp với nhà trường qua email: contact@tnu.edu.vn hoặc số điện thoại: (0262) 3825 185.",
+  ]
 
-    // Send message on Enter key
-    userInput.addEventListener('keypress', function (e) {
-        if (e.key === 'Enter') {
-            sendMessage();
+  // Chatbot settings
+  let chatbotSettings = {
+    threshold: 0.5, // Confidence threshold for intent matching
+    model: null, // Will store the trained model
+  }
+
+  // Load chatbot data from localStorage if available
+  function loadChatbotData() {
+    const savedData = localStorage.getItem("chatbotData")
+    if (savedData) {
+      try {
+        const data = JSON.parse(savedData)
+        knowledgeBase = data.knowledgeBase || knowledgeBase
+        defaultResponses = data.defaultResponses || defaultResponses
+        chatbotSettings = data.settings || chatbotSettings
+
+        // If there's a trained model, load it
+        if (data.model) {
+          chatbotSettings.model = data.model
         }
-    });
 
-    // Function to send user message
-    function sendMessage() {
-        const message = userInput.value.trim();
-        if (message !== '') {
-            // Add user message to chat
-            addMessage(message, 'user');
-            userInput.value = '';
+        console.log("Chatbot data loaded from localStorage")
+      } catch (error) {
+        console.error("Error loading chatbot data:", error)
+      }
+    }
+  }
 
-            // Show typing indicator
-            showTypingIndicator();
-
-            // Process the message and get bot response after a delay
-            setTimeout(() => {
-                removeTypingIndicator();
-                const botResponse = getBotResponse(message);
-                addMessage(botResponse.text, 'bot');
-
-                // Add suggestion chips if available
-                if (botResponse.suggestions && botResponse.suggestions.length > 0) {
-                    addSuggestions(botResponse.suggestions);
-                }
-            }, 1000);
-        }
+  // Save chatbot data to localStorage
+  function saveChatbotData() {
+    const data = {
+      knowledgeBase: knowledgeBase,
+      defaultResponses: defaultResponses,
+      settings: chatbotSettings,
+      model: chatbotSettings.model,
     }
 
-    // Function to add message to chat
-    function addMessage(text, sender) {
-        const messageDiv = document.createElement('div');
-        messageDiv.classList.add('message', sender + '-message');
+    localStorage.setItem("chatbotData", JSON.stringify(data))
+    console.log("Chatbot data saved to localStorage")
+  }
 
-        const messageContent = document.createElement('div');
-        messageContent.classList.add('message-content');
+  // Load data on initialization
+  loadChatbotData()
 
-        const messageParagraph = document.createElement('p');
-        messageParagraph.textContent = text;
+  // Open chatbot after 3 seconds
+  setTimeout(() => {
+    if (!localStorage.getItem("chatbotShown")) {
+      chatbotBox.classList.add("active")
+      localStorage.setItem("chatbotShown", "true")
+    }
+  }, 3000)
 
-        messageContent.appendChild(messageParagraph);
-        messageDiv.appendChild(messageContent);
+  // Toggle chatbot visibility
+  chatbotToggle.addEventListener("click", () => {
+    chatbotBox.classList.toggle("active")
+    chatbotNotification.style.display = "none"
+    scrollToBottom()
+  })
 
-        chatMessages.appendChild(messageDiv);
-        scrollToBottom();
+  // Close chatbot
+  chatbotClose.addEventListener("click", () => {
+    chatbotBox.classList.remove("active")
+  })
+
+  // Send message when button is clicked
+  sendBtn.addEventListener("click", sendMessage)
+
+  // Send message when Enter key is pressed
+  userInput.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") {
+      sendMessage()
+    }
+  })
+
+  let suggestionCooldown = false;
+
+  // Handle suggestion buttons
+  document.addEventListener("click", (e) => {
+    if (e.target.classList.contains("suggestion-btn")) {
+      if (suggestionCooldown) return;
+      suggestionCooldown = true;
+      setTimeout(() => {
+        suggestionCooldown = false;
+      }, 1000);
+
+      const suggestionText = e.target.textContent;
+      userInput.value = suggestionText;
+      sendMessage();
+    }
+  })
+
+  // Function to send message
+  function sendMessage() {
+    const message = userInput.value.trim()
+    if (message === "") return
+
+    // Add user message to chat
+    addMessage(message, "user")
+    userInput.value = ""
+
+    // Show typing indicator
+    showTypingIndicator()
+
+    // Process the message and respond after a delay
+    setTimeout(
+      () => {
+        removeTypingIndicator()
+        const response = getBotResponse(message)
+
+        // Nếu response là mảng, gộp lại thành 1 đoạn văn, mỗi câu xuống dòng
+        if (Array.isArray(response)) {
+          addMessage(response.join("\n"), "bot")
+          addSuggestions()
+        } else {
+          addMessage(response, "bot")
+          addSuggestions()
+        }
+      },
+      1000 + Math.random() * 1000,
+    ) // Random delay between 1-2 seconds
+  }
+
+  // Function to add a message to the chat
+  function addMessage(text, sender) {
+    const messageDiv = document.createElement("div")
+    messageDiv.className = `message ${sender}-message`
+
+    const contentDiv = document.createElement("div")
+    contentDiv.className = "message-content"
+
+    const paragraph = document.createElement("p")
+    paragraph.textContent = text
+    contentDiv.appendChild(paragraph)
+
+    const timeSpan = document.createElement("span")
+    timeSpan.className = "message-time"
+    timeSpan.textContent = getCurrentTime()
+
+    messageDiv.appendChild(contentDiv)
+    messageDiv.appendChild(timeSpan)
+
+    chatbotMessages.appendChild(messageDiv)
+    scrollToBottom()
+  }
+
+  // Function to add suggestion buttons
+  function addSuggestions() {
+    const suggestions = Object.keys(knowledgeBase).filter((key) => key !== "xin chào" && key !== "tạm biệt")
+    const randomSuggestions = suggestions.sort(() => 0.5 - Math.random()).slice(0, 4)
+
+    const messageDiv = document.createElement("div")
+    messageDiv.className = "message bot-message"
+
+    // Tạo khối suggestion có thể ẩn/hiện
+    const contentDiv = document.createElement("div")
+    contentDiv.className = "message-content"
+    contentDiv.id = "messageContent" + Date.now() // Đảm bảo id duy nhất nếu nhiều khối
+    contentDiv.style.display = "none" // Mặc định ẩn
+
+    // Header với nút đóng
+    const headSuggestion = document.createElement("div")
+    headSuggestion.className = "head-suggestion"
+
+    const paragraph = document.createElement("p")
+    paragraph.textContent = "Bạn có thể quan tâm đến: "
+    headSuggestion.appendChild(paragraph)
+
+    const closeBtn = document.createElement("i")
+    closeBtn.className = "fas fa-times"
+    closeBtn.style.cursor = "pointer"
+    closeBtn.addEventListener("click", function () {
+      contentDiv.style.display = "none"
+      openBtn.style.display = "inline-block"
+    })
+    closeBtn.id = "closeSuggestions" + Date.now()
+    headSuggestion.appendChild(closeBtn)
+
+    contentDiv.appendChild(headSuggestion)
+
+    // Danh sách gợi ý
+    const suggestionsList = document.createElement("ul")
+    suggestionsList.className = "chatbot-suggestions"
+
+    randomSuggestions.forEach((suggestion) => {
+      const li = document.createElement("li")
+      const button = document.createElement("button")
+      button.className = "suggestion-btn"
+      button.textContent = suggestion.charAt(0).toUpperCase() + suggestion.slice(1)
+      li.appendChild(button)
+      suggestionsList.appendChild(li)
+    })
+
+    contentDiv.appendChild(suggestionsList)
+
+    // Nút mở lại suggestion
+    const openBtn = document.createElement("button")
+    openBtn.innerHTML = '<i class="fas fa-comment-dots"></i> Gợi ý'
+    openBtn.className = "open-suggestion-btn"
+    openBtn.style.display = "inline-block" // Mặc định hiện nút này
+    openBtn.addEventListener("click", function () {
+      contentDiv.style.display = "block"
+      openBtn.style.display = "none"
+    })
+    openBtn.id = "openSuggestions" + Date.now()
+
+    // Thêm thời gian
+    const timeSpan = document.createElement("span")
+    timeSpan.className = "message-time"
+    timeSpan.textContent = getCurrentTime()
+
+    messageDiv.appendChild(contentDiv)
+    messageDiv.appendChild(openBtn)
+    messageDiv.appendChild(timeSpan)
+
+    chatbotMessages.appendChild(messageDiv)
+    scrollToBottom()
+  }
+
+  // Function to show typing indicator
+  function showTypingIndicator() {
+    const typingDiv = document.createElement("div")
+    typingDiv.className = "typing-indicator"
+    typingDiv.id = "typing-indicator"
+
+    for (let i = 0; i < 3; i++) {
+      const dot = document.createElement("span")
+      typingDiv.appendChild(dot)
     }
 
-    // Function to add suggestion chips
-    function addSuggestions(suggestions) {
-        const messageDiv = document.createElement('div');
-        messageDiv.classList.add('message', 'bot-message');
+    chatbotMessages.appendChild(typingDiv)
+    scrollToBottom()
+  }
 
-        const messageContent = document.createElement('div');
-        messageContent.classList.add('message-content');
+  // Function to remove typing indicator
+  function removeTypingIndicator() {
+    const typingIndicator = document.getElementById("typing-indicator")
+    if (typingIndicator) {
+      typingIndicator.remove()
+    }
+  }
 
-        const suggestionChips = document.createElement('div');
-        suggestionChips.classList.add('suggestion-chips');
+  // Function to get bot response based on user input
+  function getBotResponse(userMessage) {
+    // Chỉ tìm exact match (hoặc bạn có thể sửa lại cho React xử lý)
+    const message = userMessage.toLowerCase()
+    for (const key in knowledgeBase) {
+      if (message === key) {
+        return knowledgeBase[key]
+      }
+    }
+    return defaultResponses[Math.floor(Math.random() * defaultResponses.length)]
+  }
 
-        suggestions.forEach(suggestion => {
-            const chip = document.createElement('button');
-            chip.classList.add('suggestion-chip');
-            chip.textContent = suggestion;
-            chip.addEventListener('click', function () {
-                sendSuggestion(suggestion);
-            });
-            suggestionChips.appendChild(chip);
-        });
+  // Function to get current time in HH:MM format
+  function getCurrentTime() {
+    const now = new Date()
+    const hours = now.getHours().toString().padStart(2, "0")
+    const minutes = now.getMinutes().toString().padStart(2, "0")
+    return `${hours}:${minutes}`
+  }
 
-        messageContent.appendChild(suggestionChips);
-        messageDiv.appendChild(messageContent);
+  // Function to scroll to the bottom of the chat
+  function scrollToBottom() {
+    chatbotMessages.scrollTop = chatbotMessages.scrollHeight
+  }
 
-        chatMessages.appendChild(messageDiv);
-        scrollToBottom();
+  // Advanced features - Voice recognition (if supported by browser)
+  if ("webkitSpeechRecognition" in window || "SpeechRecognition" in window) {
+    // Create voice button
+    const voiceBtn = document.createElement("button")
+    voiceBtn.innerHTML = '<i class="fas fa-microphone"></i>'
+    voiceBtn.className = "voice-btn"
+    voiceBtn.style.backgroundColor = "#f5f5f5"
+    voiceBtn.style.color = "#004080"
+    voiceBtn.style.border = "none"
+    voiceBtn.style.width = "40px"
+    voiceBtn.style.height = "40px"
+    voiceBtn.style.borderRadius = "50%"
+    voiceBtn.style.marginRight = "10px"
+    voiceBtn.style.cursor = "pointer"
+
+    // Insert before send button
+    const chatbotInput = document.querySelector(".chatbot-input")
+    chatbotInput.insertBefore(voiceBtn, sendBtn)
+
+    // Initialize speech recognition
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
+    const recognition = new SpeechRecognition()
+    recognition.lang = "vi-VN"
+    recognition.continuous = false
+
+    voiceBtn.addEventListener("click", () => {
+      recognition.start()
+      voiceBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'
+      voiceBtn.style.backgroundColor = "#ff4757"
+      voiceBtn.style.color = "white"
+    })
+
+    recognition.onresult = (event) => {
+      const transcript = event.results[0][0].transcript
+      userInput.value = transcript
+      voiceBtn.innerHTML = '<i class="fas fa-microphone"></i>'
+      voiceBtn.style.backgroundColor = "#f5f5f5"
+      voiceBtn.style.color = "#004080"
+
+      // Send the message after a short delay
+      setTimeout(() => {
+        sendMessage()
+      }, 500)
     }
 
-    // Function to show typing indicator
-    function showTypingIndicator() {
-        const typingDiv = document.createElement('div');
-        typingDiv.classList.add('message', 'bot-message', 'typing-indicator-container');
-
-        const typingIndicator = document.createElement('div');
-        typingIndicator.classList.add('typing-indicator');
-
-        for (let i = 0; i < 3; i++) {
-            const dot = document.createElement('span');
-            typingIndicator.appendChild(dot);
-        }
-
-        typingDiv.appendChild(typingIndicator);
-        chatMessages.appendChild(typingDiv);
-        scrollToBottom();
+    recognition.onend = () => {
+      voiceBtn.innerHTML = '<i class="fas fa-microphone"></i>'
+      voiceBtn.style.backgroundColor = "#f5f5f5"
+      voiceBtn.style.color = "#004080"
     }
 
-    // Function to remove typing indicator
-    function removeTypingIndicator() {
-        const typingIndicator = document.querySelector('.typing-indicator-container');
-        if (typingIndicator) {
-            typingIndicator.remove();
-        }
+    recognition.onerror = () => {
+      voiceBtn.innerHTML = '<i class="fas fa-microphone"></i>'
+      voiceBtn.style.backgroundColor = "#f5f5f5"
+      voiceBtn.style.color = "#004080"
     }
+  }
 
-    // Function to scroll to bottom of chat
-    function scrollToBottom() {
-        chatMessages.scrollTop = chatMessages.scrollHeight;
+  // Save chat history to localStorage
+  function saveChatHistory() {
+    const messages = chatbotMessages.innerHTML
+    localStorage.setItem("chatHistory", messages)
+  }
+
+  // Load chat history from localStorage
+  function loadChatHistory() {
+    const history = localStorage.getItem("chatHistory")
+    if (history) {
+      chatbotMessages.innerHTML = history
     }
+  }
 
-    // Function to handle suggestion clicks
-    function sendSuggestion(suggestion) {
-        addMessage(suggestion, 'user');
+  // Save chat history when window is closed
+  window.addEventListener("beforeunload", saveChatHistory)
 
-        // Show typing indicator
-        showTypingIndicator();
+  // Load chat history when page is loaded
+  // loadChatHistory()
 
-        // Process the suggestion and get bot response after a delay
-        setTimeout(() => {
-            removeTypingIndicator();
-            const botResponse = getBotResponse(suggestion);
-            addMessage(botResponse.text, 'bot');
+  // Expose functions for the training interface
+  window.chatbotAPI = {
+    addIntent: (intent, phrases, response) => {
+      knowledgeBase[intent] = Array.isArray(response) ? response : [response]
+      saveChatbotData()
+      return true
+    },
 
-            // Add suggestion chips if available
-            if (botResponse.suggestions && botResponse.suggestions.length > 0) {
-                addSuggestions(botResponse.suggestions);
-            }
-        }, 1000);
-    }
-    function scrollToBottom() {
-        chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-    // Function to get bot response based on user input
-    function getBotResponse(message) {
-        // Convert message to lowercase for easier matching
-        const lowerMessage = message.toLowerCase();
+    removeIntent: (intent) => {
+      if (knowledgeBase[intent]) {
+        delete knowledgeBase[intent]
+        saveChatbotData()
+        return true
+      }
+      return false
+    },
 
-        // Define responses for different queries
-        if (lowerMessage.includes('xin chào') || lowerMessage.includes('hello') || lowerMessage.includes('hi')) {
-            return {
-                text: 'Xin chào! Tôi có thể giúp gì cho bạn về Khoa Khoa học Tự nhiên và Công nghệ?',
-                suggestions: ['Thông tin tuyển sinh', 'Chương trình đào tạo', 'Cơ hội việc làm', 'Thông tin liên hệ']
-            };
-        }
-        else if (lowerMessage.includes('tuyển sinh') || lowerMessage.includes('đăng ký') || lowerMessage.includes('nhập học')) {
-            return {
-                text: 'Thông tin tuyển sinh ngành CNTT năm 2023:\n- Mã ngành: 7480201\n- Chỉ tiêu: 120\n- Tổ hợp xét tuyển: A00, A01, D01, C01\n- Điểm chuẩn năm 2022: 19.5 điểm\n\nCác phương thức xét tuyển:\n1. Xét tuyển dựa trên kết quả kỳ thi tốt nghiệp THPT\n2. Xét tuyển dựa trên học bạ THPT\n3. Xét tuyển thẳng theo quy định của Bộ GD&ĐT',
-                suggestions: ['Học phí', 'Hồ sơ nhập học', 'Học bổng']
-            };
-        }
-        else if (lowerMessage.includes('học phí')) {
-            return {
-                text: 'Học phí ngành CNTT năm học 2023-2024:\n- Sinh viên chính quy: 15.000.000 đồng/năm\n- Có chính sách miễn giảm học phí cho sinh viên thuộc diện chính sách, sinh viên có hoàn cảnh khó khăn và sinh viên đạt thành tích cao trong học tập.',
-                suggestions: ['Học bổng', 'Chương trình đào tạo', 'Thông tin liên hệ']
-            };
-        }
-        else if (lowerMessage.includes('học bổng')) {
-            return {
-                text: 'Các loại học bổng dành cho sinh viên ngành CNTT:\n1. Học bổng khuyến khích học tập (từ 3-5 triệu đồng/học kỳ)\n2. Học bổng tài trợ từ doanh nghiệp (FPT, Viettel, VNPT...)\n3. Học bổng dành cho sinh viên nghèo vượt khó\n4. Học bổng dành cho tân sinh viên có điểm đầu vào cao',
-                suggestions: ['Học phí', 'Chương trình đào tạo', 'Cơ hội việc làm']
-            };
-        }
-        else if (lowerMessage.includes('chương trình') || lowerMessage.includes('đào tạo') || lowerMessage.includes('học phần')) {
-            return {
-                text: 'Chương trình đào tạo ngành CNTT:\n- Thời gian đào tạo: 4 năm\n- Tổng số tín chỉ: 150\n- Cấu trúc chương trình:\n  + Giáo dục đại cương: 45 tín chỉ\n  + Cơ sở ngành: 35 tín chỉ\n  + Chuyên ngành: 55 tín chỉ\n  + Thực tập và khóa luận tốt nghiệp: 15 tín chỉ\n\nCác học phần chính: Lập trình, Cấu trúc dữ liệu và giải thuật, Cơ sở dữ liệu, Mạng máy tính, Trí tuệ nhân tạo, An toàn thông tin...',
-                suggestions: ['Cơ hội việc làm', 'Đội ngũ giảng viên', 'Cơ sở vật chất']
-            };
-        }
-        else if (lowerMessage.includes('việc làm') || lowerMessage.includes('nghề nghiệp') || lowerMessage.includes('công việc')) {
-            return {
-                text: 'Cơ hội việc làm sau khi tốt nghiệp ngành CNTT:\n- Lập trình viên (Frontend, Backend, Mobile)\n- Chuyên viên quản trị cơ sở dữ liệu\n- Kỹ sư mạng và bảo mật\n- Quản lý dự án CNTT\n- Chuyên gia AI/Machine Learning\n- Kiểm thử phần mềm\n\nThống kê việc làm:\n- 95% sinh viên có việc làm sau 1 năm tốt nghiệp\n- 30% sinh viên làm việc tại các công ty nước ngoài\n- 15% sinh viên tự khởi nghiệp',
-                suggestions: ['Doanh nghiệp hợp tác', 'Mức lương', 'Chương trình đào tạo']
-            };
-        }
-        else if (lowerMessage.includes('giảng viên') || lowerMessage.includes('giáo viên') || lowerMessage.includes('thầy cô')) {
-            return {
-                text: 'Đội ngũ giảng viên ngành CNTT:\n- Tổng số: 25 giảng viên\n- Trình độ: 3 PGS.TS, 10 Tiến sĩ, 12 Thạc sĩ\n- Đều được đào tạo từ các trường đại học uy tín trong và ngoài nước\n- Có kinh nghiệm giảng dạy và nghiên cứu trong các lĩnh vực: Khoa học máy tính, Hệ thống thông tin, Mạng máy tính, Trí tuệ nhân tạo...',
-                suggestions: ['Nghiên cứu khoa học', 'Cơ sở vật chất', 'Chương trình đào tạo']
-            };
-        }
-        else if (lowerMessage.includes('cơ sở') || lowerMessage.includes('vật chất') || lowerMessage.includes('phòng lab')) {
-            return {
-                text: 'Cơ sở vật chất phục vụ đào tạo ngành CNTT:\n- 5 phòng thực hành máy tính với hơn 200 máy cấu hình cao\n- Phòng Lab IoT với các thiết bị hiện đại\n- Phòng Lab AI với máy chủ GPU mạnh mẽ\n- Thư viện chuyên ngành với hàng nghìn đầu sách, tạp chí CNTT\n- Hệ thống mạng internet tốc độ cao\n- Phòng học thông minh với trang thiết bị hiện đại',
-                suggestions: ['Đội ngũ giảng viên', 'Nghiên cứu khoa học', 'Học bổng']
-            };
-        }
-        else if (lowerMessage.includes('nghiên cứu') || lowerMessage.includes('đề tài') || lowerMessage.includes('khoa học')) {
-            return {
-                text: 'Hoạt động nghiên cứu khoa học của ngành CNTT tập trung vào các lĩnh vực:\n- Trí tuệ nhân tạo và học máy\n- Internet of Things và điện toán đám mây\n- An toàn thông tin và bảo mật mạng\n- Phát triển phần mềm và ứng dụng di động\n- Xử lý ảnh và thị giác máy tính\n- Khai phá dữ liệu và dữ liệu lớn\n\nSinh viên được khuyến khích tham gia các nhóm nghiên cứu và các đề tài nghiên cứu khoa học sinh viên.',
-                suggestions: ['Đội ngũ giảng viên', 'Hợp tác quốc tế', 'Cơ sở vật chất']
-            };
-        }
-        else if (lowerMessage.includes('liên hệ') || lowerMessage.includes('địa chỉ') || lowerMessage.includes('email')) {
-            return {
-                text: 'Thông tin liên hệ Khoa Khoa học Tự nhiên và Công nghệ:\n- Địa chỉ: Phòng A1.01, Trường Đại học Tây Nguyên, 567 Lê Duẩn, TP. Buôn Ma Thuột, Đắk Lắk\n- Điện thoại: (0262) 3825 185\n- Email: khoakhtn@ttn.edu.vn\n- Website: khtn.ttn.edu.vn\n\nThời gian làm việc: Thứ 2 - Thứ 6 (7:30 - 11:30 và 13:30 - 17:00)',
-                suggestions: ['Tư vấn trực tiếp', 'Fanpage Facebook', 'Thông tin tuyển sinh']
-            };
-        }
-        else {
-            return {
-                text: 'Xin lỗi, tôi chưa hiểu rõ câu hỏi của bạn. Bạn có thể hỏi về các chủ đề sau hoặc đặt câu hỏi rõ ràng hơn:',
-                suggestions: ['Thông tin tuyển sinh', 'Chương trình đào tạo', 'Cơ hội việc làm', 'Học phí và học bổng', 'Thông tin liên hệ']
-            };
-        }
-    }
+    updateIntent: (intent, phrases, response) => {
+      if (knowledgeBase[intent]) {
+        knowledgeBase[intent] = Array.isArray(response) ? response : [response]
+        saveChatbotData()
+        return true
+      }
+      return false
+    },
 
-    // Expose sendSuggestion to global scope for the suggestion chips
-    window.sendSuggestion = sendSuggestion;
+    getIntents: () =>
+      Object.keys(knowledgeBase).map((intent) => ({
+        name: intent,
+        response: knowledgeBase[intent],
+      })),
+
+    setDefaultResponses: (responses) => {
+      defaultResponses = responses
+      saveChatbotData()
+    },
+
+    setThreshold: (threshold) => {
+      chatbotSettings.threshold = threshold
+      saveChatbotData()
+    },
+
+    trainModel: () => {
+      // Simple TF-IDF based model training
+      const model = {}
+
+      // For each intent, create a vector of token weights
+      for (const intent in knowledgeBase) {
+        model[intent] = {}
+
+        // Use the intent name itself as training data
+        const intentTokens = tokenize(intent)
+        for (const token of intentTokens) {
+          model[intent][token] = (model[intent][token] || 0) + 3 // Higher weight for intent tokens
+        }
+      }
+
+      chatbotSettings.model = model
+      saveChatbotData()
+      return true
+    },
+
+    exportData: () => ({
+      knowledgeBase: knowledgeBase,
+      defaultResponses: defaultResponses,
+      settings: chatbotSettings,
+    }),
+
+    importData: (data) => {
+      if (data.knowledgeBase) knowledgeBase = data.knowledgeBase
+      if (data.defaultResponses) defaultResponses = data.defaultResponses
+      if (data.settings) chatbotSettings = data.settings
+      saveChatbotData()
+      return true
+    },
+  }
+})
+document.getElementById('closeSuggestions').addEventListener('click', function () {
+  document.getElementById('messageContent').style.display = 'none';
+  document.getElementById('openSuggestions').style.display = 'inline-block';
+});
+
+document.getElementById('openSuggestions').addEventListener('click', function () {
+  document.getElementById('messageContent').style.display = 'block';
+  document.getElementById('openSuggestions').style.display = 'none';
 });
