@@ -1,5 +1,14 @@
-// Xoá lịch sử chat mỗi lần reload
 localStorage.removeItem("chatHistory")
+
+document.getElementById('closeSuggestions').addEventListener('click', function () {
+  document.getElementById('messageContent').style.display = 'none';
+  document.getElementById('openSuggestions').style.display = 'inline-block';
+});
+
+document.getElementById('openSuggestions').addEventListener('click', function () {
+  document.getElementById('messageContent').style.display = 'block';
+  document.getElementById('openSuggestions').style.display = 'none';
+});
 
 document.addEventListener("DOMContentLoaded", () => {
   // Chatbot elements
@@ -11,82 +20,58 @@ document.addEventListener("DOMContentLoaded", () => {
   const sendBtn = document.getElementById("send-btn")
   const chatbotNotification = document.querySelector(".chatbot-notification")
 
-  // Default knowledge base for the chatbot
+  // Knowledge base chỉ lấy nội dung thực tế từ index.html
   let knowledgeBase = {
     "thông tin tuyển sinh": [
-      "Trường Đại học Tây Nguyên tuyển sinh các ngành đào tạo sau:",
-      "1. Công nghệ thông tin",
-      "2. Kỹ thuật phần mềm",
-      "3. Hệ thống thông tin",
-      "4. An toàn thông tin",
-      "Điểm chuẩn năm 2024 dao động từ 18-24 điểm tùy ngành. Bạn có thể tìm hiểu thêm tại website tuyển sinh của trường.",
+      "Bạn có thể xem thông tin tuyển sinh tại: https://tuyensinh.ttn.edu.vn/ hoặc mục Tuyển sinh trên menu chính.",
+      "Các ngành đào tạo: Công nghệ thông tin, Kỹ thuật phần mềm, Hệ thống thông tin, An toàn thông tin."
     ],
     "chương trình đào tạo cntt": [
-      "Chương trình đào tạo ngành Công nghệ Thông tin bao gồm 150 tín chỉ, thời gian đào tạo 4 năm với các học phần chính:",
-      "- Lập trình cơ bản và nâng cao",
-      "- Cấu trúc dữ liệu và giải thuật",
-      "- Cơ sở dữ liệu",
-      "- Mạng máy tính",
-      "- Trí tuệ nhân tạo",
-      "- Phát triển ứng dụng web/mobile",
-      "Sinh viên sẽ được thực tập tại doanh nghiệp trong 2 học kỳ cuối.",
+      "Chương trình đào tạo CNTT gồm 2 chuyên ngành: Hệ thống và mạng, Công nghệ phần mềm.",
+      "Tham khảo chi tiết tại: https://www.ttn.edu.vn/index.php/bmktn/ktnbmtin"
     ],
     "học phí": [
-      "Học phí năm học 2024-2025 của Trường Đại học Tây Nguyên như sau:",
-      "- Khối ngành Công nghệ thông tin: 18-20 triệu đồng/năm",
-      "- Sinh viên có thể đóng học phí theo học kỳ hoặc theo năm",
-      "- Trường có nhiều chính sách học bổng cho sinh viên xuất sắc và sinh viên có hoàn cảnh khó khăn",
+      "Học phí ngành CNTT: 18-20 triệu đồng/năm. Có thể đóng theo kỳ hoặc năm.",
+      "Trường có nhiều chính sách học bổng cho sinh viên xuất sắc và hoàn cảnh khó khăn."
     ],
     "cơ hội việc làm": [
-      "Sinh viên tốt nghiệp ngành CNTT có nhiều cơ hội việc làm với mức lương hấp dẫn:",
-      "- Lập trình viên (Frontend, Backend, Fullstack)",
-      "- Kỹ sư phát triển phần mềm",
-      "- Chuyên viên phân tích dữ liệu",
-      "- Chuyên viên an toàn thông tin",
-      "- Quản trị hệ thống",
-      "Tỷ lệ sinh viên có việc làm sau 3 tháng tốt nghiệp đạt trên 90%.",
+      "Sinh viên tốt nghiệp CNTT có thể làm việc tại các vị trí: Lập trình viên, kỹ sư phần mềm, quản trị hệ thống, chuyên viên dữ liệu, an toàn thông tin.",
+      "Tỷ lệ sinh viên có việc làm sau 3 tháng tốt nghiệp đạt trên 90%."
     ],
     "giảng viên": [
-      "Bộ môn CNTT có đội ngũ giảng viên chất lượng cao:",
-      "- 5 Tiến sĩ",
-      "- 15 Thạc sĩ",
-      "- Nhiều giảng viên được đào tạo từ nước ngoài",
-      "- Có kinh nghiệm thực tế tại các doanh nghiệp công nghệ lớn",
+      "Bộ môn CNTT có đội ngũ gồm 1 Phó Giáo sư, 3 Tiến sĩ, 8 Thạc sĩ và các nghiên cứu sinh.",
+      "Giảng viên trẻ, nhiệt huyết, nhiều kinh nghiệm thực tế."
     ],
     "cơ sở vật chất": [
-      "Trường Đại học Tây Nguyên có cơ sở vật chất hiện đại phục vụ đào tạo CNTT:",
-      "- 10 phòng máy tính với hơn 300 máy tính cấu hình cao",
-      "- Phòng lab IoT, AI, VR/AR",
-      "- Thư viện điện tử với hơn 50.000 đầu sách và tài liệu",
-      "- Khu ký túc xá khang trang",
-      "- Khu thể thao đa năng",
+      "Cơ sở vật chất hiện đại: 10 phòng máy tính, phòng lab IoT, AI, VR/AR, thư viện điện tử, ký túc xá, khu thể thao."
     ],
     "hoạt động ngoại khóa": [
-      "Sinh viên CNTT có thể tham gia nhiều hoạt động ngoại khóa:",
-      "- CLB Lập trình",
-      "- CLB Robotics",
-      "- Cuộc thi Hackathon thường niên",
-      "- Chương trình trao đổi sinh viên quốc tế",
-      "- Các hoạt động tình nguyện và trải nghiệm thực tế",
+      "Sinh viên CNTT tham gia CLB Lập trình, CLB Robotics, Hackathon, trao đổi sinh viên quốc tế, hoạt động tình nguyện."
+    ],
+    "nghiên cứu khoa học": [
+      "Bộ môn CNTT đạt nhiều thành tích nghiên cứu khoa học, hợp tác với doanh nghiệp như TMA Solutions.",
+      "Chi tiết tại: https://www.ttn.edu.vn/index.php/bmktn/ktnbmtin"
     ],
     "liên hệ": [
-      "Bạn có thể liên hệ với Bộ môn CNTT qua:",
-      "- Địa chỉ: Phòng A203, Tòa nhà A, Trường Đại học Tây Nguyên, 567 Lê Duẩn, TP. Buôn Ma Thuột",
-      "- Điện thoại: (0262) 3825 XXX",
-      "- Email: cntt@tnu.edu.vn",
-      "- Fanpage: facebook.com/cntt.tnu",
+      "Bộ môn CNTT - Trường Đại học Tây Nguyên",
+      "Địa chỉ: Phòng 7.4.25, tầng 4 Nhà số 7, 567 Lê Duẩn, TP. Buôn Ma Thuột",
+      "Điện thoại: (0262) 3825 185",
+      "Email: khoakhtncn@ttn.edu.vn",
+      "Website: https://www.ttn.edu.vn/index.php/bmktn/ktnbmtin",
+      "Fanpage: facebook.com/dhtn567"
     ],
     "xin chào": [
-      "Xin chào! Tôi là TNU Assistant, trợ lý ảo của Trường Đại học Tây Nguyên. Tôi có thể giúp gì cho bạn?",
+      "Xin chào! Tôi là TNU TechBot, trợ lý ảo Công nghệ Thông tin của Trường Đại học Tây Nguyên. Tôi có thể giúp gì cho bạn?"
     ],
-    "tạm biệt": ["Cảm ơn bạn đã trò chuyện! Nếu có thắc mắc gì thêm, hãy quay lại nhé. Chúc bạn một ngày tốt lành!"],
+    "tạm biệt": [
+      "Cảm ơn bạn đã trò chuyện! Nếu có thắc mắc gì thêm, hãy quay lại nhé. Chúc bạn một ngày tốt lành!"
+    ]
   }
 
   // Default responses when no match is found
   let defaultResponses = [
-    "Xin lỗi, tôi chưa hiểu câu hỏi của bạn. Bạn có thể diễn đạt theo cách khác được không?",
-    "Tôi không có thông tin về vấn đề này. Bạn có thể hỏi về thông tin tuyển sinh, chương trình đào tạo, học phí hoặc cơ hội việc làm không?",
-    "Câu hỏi của bạn nằm ngoài phạm vi kiến thức của tôi. Bạn có thể liên hệ trực tiếp với nhà trường qua email: contact@tnu.edu.vn hoặc số điện thoại: (0262) 3825 185.",
+    "Xin lỗi, tôi chưa hiểu câu hỏi của bạn. Bạn có thể hỏi về tuyển sinh, đào tạo, học phí, cơ hội việc làm, giảng viên, cơ sở vật chất, hoạt động ngoại khóa hoặc liên hệ.",
+    "Bạn vui lòng đặt câu hỏi rõ hơn hoặc xem thêm tại website: https://www.ttn.edu.vn/index.php/bmktn/ktnbmtin"
   ]
 
   // Chatbot settings
@@ -332,7 +317,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Function to get bot response based on user input
   function getBotResponse(userMessage) {
-    // Chỉ tìm exact match (hoặc bạn có thể sửa lại cho React xử lý)
     const message = userMessage.toLowerCase()
     for (const key in knowledgeBase) {
       if (message === key) {
@@ -509,12 +493,3 @@ document.addEventListener("DOMContentLoaded", () => {
     },
   }
 })
-document.getElementById('closeSuggestions').addEventListener('click', function () {
-  document.getElementById('messageContent').style.display = 'none';
-  document.getElementById('openSuggestions').style.display = 'inline-block';
-});
-
-document.getElementById('openSuggestions').addEventListener('click', function () {
-  document.getElementById('messageContent').style.display = 'block';
-  document.getElementById('openSuggestions').style.display = 'none';
-});
