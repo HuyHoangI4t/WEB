@@ -362,12 +362,11 @@ document.addEventListener("DOMContentLoaded", () => {
     voiceBtn.innerHTML = '<i class="fas fa-microphone"></i>'
     voiceBtn.className = "voice-btn"
     voiceBtn.style.backgroundColor = "#f5f5f5"
-    voiceBtn.style.color = "#004080"
+    voiceBtn.style.color = "#FFFFFF"
     voiceBtn.style.border = "none"
     voiceBtn.style.width = "40px"
     voiceBtn.style.height = "40px"
     voiceBtn.style.borderRadius = "50%"
-    voiceBtn.style.marginRight = "10px"
     voiceBtn.style.cursor = "pointer"
 
     // Insert before send button
