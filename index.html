@@ -329,7 +329,7 @@
                     <img src="/img/logo.png" alt="TNU Bot"
                         class="chatbot-avatar">
                     <div>
-                        <h3>TNU TechBot</h3>
+                        <h3>TNU Assistant</h3>
                         <span class="chatbot-status">Online</span>
                     </div>
                 </div>
@@ -343,14 +343,15 @@
                 <div class="chatbot-messages" id="chatbot-messages">
                     <div class="message bot-message">
                         <div class="message-content">
-                            <p>Xin chào! Tôi là <b>TNU TechBot</b>, trợ lý ảo Công nghệ Thông tin của Trường Đại học Tây Nguyên. Tôi có thể giúp gì cho bạn?</p>
+                            <p>Xin chào! Tôi là TNU Assistant, trợ lý ảo của Trường Đại học Tây Nguyên. Tôi có thể giúp
+                                gì cho bạn?</p>
                         </div>
                     </div>
                     <div class="message bot-message">
-                        <div class="message-content">
+                        <div class="message-content" id="messageContent">
                             <div class="head-suggestion">
                                 <p>Bạn có thể hỏi tôi về:</p>
-                                <i class="fas fa-times" style="cursor:pointer"></i>
+                                <i class="fas fa-times" id="closeSuggestions" style="cursor:pointer"></i>
                             </div>
                             <ul class="chatbot-suggestions">
                                 <li><button class="suggestion-btn">Thông tin tuyển sinh</button></li>
@@ -361,7 +362,7 @@
                         </div>
 
                         <!-- Nút mở lại suggestion -->
-                        <button style="display:none" class="open-suggestion-btn">
+                        <button id="openSuggestions" style="display:none" class="open-suggestion-btn">
                             <i class="fas fa-comment-dots"></i> Gợi ý
                         </button>
                     </div>
