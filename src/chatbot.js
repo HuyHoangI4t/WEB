@@ -1,5 +1,5 @@
 localStorage.removeItem("chatHistory")
-
+localStorage.clear()
 document.getElementById('closeSuggestions').addEventListener('click', function () {
   document.getElementById('messageContent').style.display = 'none';
   document.getElementById('openSuggestions').style.display = 'inline-block';
@@ -205,8 +205,10 @@ document.addEventListener("DOMContentLoaded", () => {
     contentDiv.className = "message-content"
 
     const paragraph = document.createElement("p")
-    // Thay thế \n bằng <br> để ngắt dòng khi bot trả lời
-    paragraph.innerHTML = text.replace(/\n/g, "<br>")
+    // Tự động xuống dòng khi gặp \n hoặc khi có dấu chấm, dấu hỏi, dấu chấm than (nếu cần)
+    paragraph.innerHTML = text
+      .replace(/\n/g, "<br>")
+      .replace(/([^.?!])([.?!])(\s|$)/g, "$1$2<br>$3")
     contentDiv.appendChild(paragraph)
 
     const timeSpan = document.createElement("span")
@@ -277,6 +279,8 @@ document.addEventListener("DOMContentLoaded", () => {
     openBtn.addEventListener("click", function () {
       contentDiv.style.display = "block"
       openBtn.style.display = "none"
+      // Tự động cuộn xuống dưới khi mở gợi ý
+      setTimeout(scrollToBottom, 100)
     })
     openBtn.id = "openSuggestions" + Date.now()
 
