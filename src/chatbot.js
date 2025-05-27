@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let knowledgeBase = {
     "thông tin tuyển sinh": [
       "Bạn có thể xem thông tin tuyển sinh tại: https://tuyensinh.ttn.edu.vn/ hoặc mục Tuyển sinh trên menu chính.",
-      "Các ngành đào tạo: Công nghệ thông tin, Kỹ thuật phần mềm, Hệ thống thông tin, An toàn thông tin."
+      "Các ngành đào tạo Công nghệ thông tin: Hệ thống và mạng, Công nghệ phần mềm."
     ],
     "chương trình đào tạo cntt": [
       "Chương trình đào tạo CNTT gồm 2 chuyên ngành: Hệ thống và mạng, Công nghệ phần mềm.",
@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
       "Địa chỉ: Phòng 7.4.25, tầng 4 Nhà số 7, 567 Lê Duẩn, TP. Buôn Ma Thuột",
       "Điện thoại: (0262) 3825 185",
       "Email: khoakhtncn@ttn.edu.vn",
-      "Website: https://www.ttn.edu.vn/index.php/bmktn/ktnbmtin",
+      "Website: www.ttn.edu.vn/index.php/bmktn/ktnbmtin",
       "Fanpage: facebook.com/dhtn567"
     ],
     "xin chào": [
@@ -205,7 +205,8 @@ document.addEventListener("DOMContentLoaded", () => {
     contentDiv.className = "message-content"
 
     const paragraph = document.createElement("p")
-    paragraph.textContent = text
+    // Thay thế \n bằng <br> để ngắt dòng khi bot trả lời
+    paragraph.innerHTML = text.replace(/\n/g, "<br>")
     contentDiv.appendChild(paragraph)
 
     const timeSpan = document.createElement("span")
