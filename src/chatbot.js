@@ -1,500 +1,380 @@
-localStorage.removeItem("chatHistory")
+import { findAnswer } from "./knowledgeBase.js";
 localStorage.clear()
-document.getElementById('closeSuggestions').addEventListener('click', function () {
-  document.getElementById('messageContent').style.display = 'none';
-  document.getElementById('openSuggestions').style.display = 'inline-block';
-});
+// Helper: format time
+function formatTime(date) {
+  return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+}
 
-document.getElementById('openSuggestions').addEventListener('click', function () {
-  document.getElementById('messageContent').style.display = 'block';
-  document.getElementById('openSuggestions').style.display = 'none';
-});
+// Markdown parser (cơ bản: **bold**, [link](url), *italic*, - list)
+function parseMarkdown(text) {
+  let html = text
+    .replace(/(?:\r\n|\r|\n)/g, "<br>")
+    .replace(/\*\*(.*?)\*\*/g, "<b>$1</b>")
+    .replace(/\*(.*?)\*/g, "<i>$1</i>")
+    .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>')
+    .replace(/^- (.*)$/gm, '<li>$1</li>');
+  // wrap <li> in <ul> if any
+  if (html.includes("<li>")) html = "<ul>" + html + "</ul>";
+  return html;
+}
 
-document.addEventListener("DOMContentLoaded", () => {
-  // Chatbot elements
-  const chatbotToggle = document.querySelector(".chatbot-toggle")
-  const chatbotBox = document.querySelector(".chatbot-box")
-  const chatbotClose = document.querySelector(".chatbot-close")
-  const chatbotMessages = document.getElementById("chatbot-messages")
-  const userInput = document.getElementById("user-input")
-  const sendBtn = document.getElementById("send-btn")
-  const chatbotNotification = document.querySelector(".chatbot-notification")
 
-  // Knowledge base chỉ lấy nội dung thực tế từ index.html
-  let knowledgeBase = {
-    "thông tin tuyển sinh": [
-      "Bạn có thể xem thông tin tuyển sinh tại: https://tuyensinh.ttn.edu.vn/ hoặc mục Tuyển sinh trên menu chính.",
-      "Các ngành đào tạo Công nghệ thông tin: Hệ thống và mạng, Công nghệ phần mềm."
-    ],
-    "chương trình đào tạo cntt": [
-      "Chương trình đào tạo CNTT gồm 2 chuyên ngành: Hệ thống và mạng, Công nghệ phần mềm.",
-      "Tham khảo chi tiết tại: https://www.ttn.edu.vn/index.php/bmktn/ktnbmtin"
-    ],
-    "học phí": [
-      "Học phí ngành CNTT: 18-20 triệu đồng/năm. Có thể đóng theo kỳ hoặc năm.",
-      "Trường có nhiều chính sách học bổng cho sinh viên xuất sắc và hoàn cảnh khó khăn."
-    ],
-    "cơ hội việc làm": [
-      "Sinh viên tốt nghiệp CNTT có thể làm việc tại các vị trí: Lập trình viên, kỹ sư phần mềm, quản trị hệ thống, chuyên viên dữ liệu, an toàn thông tin.",
-      "Tỷ lệ sinh viên có việc làm sau 3 tháng tốt nghiệp đạt trên 90%."
-    ],
-    "giảng viên": [
-      "Bộ môn CNTT có đội ngũ gồm 1 Phó Giáo sư, 3 Tiến sĩ, 8 Thạc sĩ và các nghiên cứu sinh.",
-      "Giảng viên trẻ, nhiệt huyết, nhiều kinh nghiệm thực tế."
-    ],
-    "cơ sở vật chất": [
-      "Cơ sở vật chất hiện đại: 10 phòng máy tính, phòng lab IoT, AI, VR/AR, thư viện điện tử, ký túc xá, khu thể thao."
-    ],
-    "hoạt động ngoại khóa": [
-      "Sinh viên CNTT tham gia CLB Lập trình, CLB Robotics, Hackathon, trao đổi sinh viên quốc tế, hoạt động tình nguyện."
-    ],
-    "nghiên cứu khoa học": [
-      "Bộ môn CNTT đạt nhiều thành tích nghiên cứu khoa học, hợp tác với doanh nghiệp như TMA Solutions.",
-      "Chi tiết tại: https://www.ttn.edu.vn/index.php/bmktn/ktnbmtin"
-    ],
-    "liên hệ": [
-      "Bộ môn CNTT - Trường Đại học Tây Nguyên",
-      "Địa chỉ: Phòng 7.4.25, tầng 4 Nhà số 7, 567 Lê Duẩn, TP. Buôn Ma Thuột",
-      "Điện thoại: (0262) 3825 185",
-      "Email: khoakhtncn@ttn.edu.vn",
-      "Website: www.ttn.edu.vn/index.php/bmktn/ktnbmtin",
-      "Fanpage: facebook.com/dhtn567"
-    ],
-    "xin chào": [
-      "Xin chào! Tôi là TNU TechBot, trợ lý ảo Công nghệ Thông tin của Trường Đại học Tây Nguyên. Tôi có thể giúp gì cho bạn?"
-    ],
-    "tạm biệt": [
-      "Cảm ơn bạn đã trò chuyện! Nếu có thắc mắc gì thêm, hãy quay lại nhé. Chúc bạn một ngày tốt lành!"
-    ]
+// Lưu lịch sử chat vào localStorage
+function saveHistory(msg, sender) {
+  let history = JSON.parse(localStorage.getItem("chatbot_history") || "[]");
+  history.push({
+    sender,
+    msg,
+    time: new Date().toISOString()
+  });
+  localStorage.setItem("chatbot_history", JSON.stringify(history));
+}
+
+function ensureChatbotBox() {
+  let box = document.querySelector(".chatbot-box");
+  if (box) return box;
+  // Nếu bị xóa khỏi DOM, tạo lại từ đầu
+  const container = document.querySelector(".chatbot-container");
+  if (!container) return null;
+  // (Không tạo lại vì đã có sẵn trong index.html)
+  return document.querySelector(".chatbot-box");
+}
+
+// Thêm tin nhắn vào khung chat (hỗ trợ markdown, avatar, copy, resend)
+function addMessage(text, sender, time = new Date(), save = true) {
+  const box = ensureChatbotBox();
+  if (!box) return;
+  const messages = box.querySelector(".chatbot-messages");
+  const msgDiv = document.createElement("div");
+  msgDiv.className = `message ${sender}-message`;
+  // Avatar
+  let avatar = sender === "bot"
+    ? `<img src="/img/logo.png" alt="bot" class="chatbot-avatar" style="width:30px;height:30px;margin-right:6px;">`
+    : `<i class="fas fa-user-circle" style="font-size:28px;color:#0072ff;margin-left:6px;"></i>`;
+
+  let btnStyle = `
+    border:none;
+    background:transparent;
+    border-radius:50%;
+    min-width:25px;
+    min-height:25px;
+    height:25px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    font-size:12px;
+    color:#666;
+    
+    cursor:pointer;
+    transition:background 0.18s;
+  `;
+  let copyBtn = `<button class="copy-btn" title="Copy" style="${btnStyle}" onmouseover="this.style.background='#f0f2f6';" onmouseout="this.style.background='transparent';"><i class="fas fa-copy"></i></button>`;
+  let resendBtn = sender === "user"
+    ? `<button class="resend-btn" title="Gửi lại" style="${btnStyle}" onmouseover="this.style.background='#f0f2f6';" onmouseout="this.style.background='transparent';"><i class="fas fa-redo"></i></button>`
+    : "";
+  let reactBtn = sender === "bot"
+    ? `<span class="react-btns">
+        <button class="react-like" title="Hữu ích" style="${btnStyle}" onmouseover="this.style.background='#f0f2f6';" onmouseout="this.style.background='transparent';"><i class="fas fa-thumbs-up"></i></button>
+        <button class="react-dislike" title="Chưa tốt" style="${btnStyle}" onmouseover="this.style.background='#f0f2f6';" onmouseout="this.style.background='transparent';"><i class="fas fa-thumbs-down"></i></button>
+      </span>`
+    : "";
+  let showTime = true;
+  const lastMsg = messages.lastElementChild;
+  if (lastMsg && lastMsg.dataset && lastMsg.dataset.time) {
+    const lastTime = lastMsg.dataset.time;
+    if (lastTime === formatTime(time)) showTime = false;
   }
+  let timeDiv = showTime
+    ? `<div style="text-align:center;margin:8px 0 2px 0;font-size:12px;color:#888;width:100%">${formatTime(time)}</div>`
+    : "";
+  msgDiv.dataset.time = formatTime(time);
 
-  // Default responses when no match is found
-  let defaultResponses = [
-    "Xin lỗi, tôi chưa hiểu câu hỏi của bạn. Bạn có thể hỏi về tuyển sinh, đào tạo, học phí, cơ hội việc làm, giảng viên, cơ sở vật chất, hoạt động ngoại khóa hoặc liên hệ.",
-    "Bạn vui lòng đặt câu hỏi rõ hơn hoặc xem thêm tại website: https://www.ttn.edu.vn/index.php/bmktn/ktnbmtin"
-  ]
-
-  // Chatbot settings
-  let chatbotSettings = {
-    threshold: 0.5, // Confidence threshold for intent matching
-    model: null, // Will store the trained model
+  let botstyle = `
+    display:inline-block;
+    padding:10px 18px;
+    max-width:80%;
+    word-break:break-word;
+    font-size:15px;
+    background:${sender === "user" ? "#00bfff" : "#fff"};
+    color:${sender === "user" ? "#fff" : "#031B88"};
+    box-shadow:0 1px 2px rgba(0,0,0,0.08);
+    margin-bottom:2px;
+    margin-top:2px;
+    text-align:left;
+  `;
+  let userstyle = `
+    display:inline-block;
+    padding:10px 18px;
+    border-radius:16px;
+    word-break:break-word;
+    font-size:15px;
+    background:${sender === "user" ? "#00bfff" : "#fff"};
+    color:${sender === "user" ? "#fff" : "#031B88"};
+    box-shadow:0 1px 2px rgba(0,0,0,0.08);
+    margin-bottom:2px;
+    margin-top:2px;
+    text-align:left;
+  `;
+  if (sender === "user") {
+    // User: nội dung bên trái, avatar bên phải
+    msgDiv.innerHTML = `
+      ${timeDiv}
+      <div style="display:flex;align-items:center;justify-content:flex-end;">
+        <div style="flex:1;text-align:right;display:flex;flex-direction:column;align-items:flex-end;">
+          <div class="message-content" style="${userstyle}">${parseMarkdown(text)}</div>
+          <div class="message-time" style="margin-right:1px;">${copyBtn} ${resendBtn}</div>
+        </div>
+        ${avatar}
+      </div>
+    `;
+  } else {
+    // Bot: avatar bên trái, nội dung bên phải
+    msgDiv.innerHTML = `
+      ${timeDiv}
+      <div style="display:flex;align-items:flex-end;">
+        ${avatar}
+        <div style="flex:1;display:flex;flex-direction:column;align-items:flex-start;">
+          <div class="message-content" style="${botstyle}">${parseMarkdown(text)}</div>
+          <div class="message-time" style="margin-left:1px;">${copyBtn} ${resendBtn} ${reactBtn}</div>
+        </div>
+      </div>
+    `;
   }
-
-  // Load chatbot data from localStorage if available
-  function loadChatbotData() {
-    const savedData = localStorage.getItem("chatbotData")
-    if (savedData) {
-      try {
-        const data = JSON.parse(savedData)
-        knowledgeBase = data.knowledgeBase || knowledgeBase
-        defaultResponses = data.defaultResponses || defaultResponses
-        chatbotSettings = data.settings || chatbotSettings
-
-        // If there's a trained model, load it
-        if (data.model) {
-          chatbotSettings.model = data.model
+  messages.appendChild(msgDiv);
+  scrollToBottom(messages);
+  // Copy event
+  msgDiv.querySelectorAll(".copy-btn").forEach(btn => {
+    btn.onclick = () => {
+      const content = msgDiv.querySelector(".message-content").innerText;
+      navigator.clipboard.writeText(content);
+      btn.innerHTML = '<i class="fas fa-check"></i>';
+      setTimeout(() => (btn.innerHTML = '<i class="fas fa-copy"></i>'), 1000);
+    };
+  });
+  // Resend event
+  msgDiv.querySelectorAll(".resend-btn").forEach(btn => {
+    btn.onclick = () => {
+      const content = msgDiv.querySelector(".message-content").innerText;
+      addMessage(content, "user");
+      botReply(content);
+    };
+  });
+  // React event
+  msgDiv.querySelectorAll(".react-like, .react-dislike").forEach(btn => {
+    btn.onclick = () => {
+      // Disable only the other button, not both
+      if (btn.classList.contains("react-like")) {
+        btn.style.color = "#2ecc40";
+        btn.disabled = true;
+        const other = msgDiv.querySelector(".react-dislike");
+        if (other) {
+          other.disabled = true;
+          other.style.pointerEvents = "none";
+          other.style.opacity = "0.5";
         }
-
-        console.log("Chatbot data loaded from localStorage")
-      } catch (error) {
-        console.error("Error loading chatbot data:", error)
+      } else {
+        btn.style.color = "#e74c3c";
+        btn.disabled = true;
+        const other = msgDiv.querySelector(".react-like");
+        if (other) {
+          other.disabled = true;
+          other.style.pointerEvents = "none";
+          other.style.opacity = "0.5";
+        }
       }
-    }
-  }
+    };
+  });
+  if (save) saveHistory(text, sender);
+}
 
-  // Save chatbot data to localStorage
-  function saveChatbotData() {
-    const data = {
-      knowledgeBase: knowledgeBase,
-      defaultResponses: defaultResponses,
-      settings: chatbotSettings,
-      model: chatbotSettings.model,
-    }
+// Hiệu ứng typing
+function showTyping() {
+  const box = ensureChatbotBox();
+  if (!box) return null;
+  const messages = box.querySelector(".chatbot-messages");
+  const typing = document.createElement("div");
+  typing.className = "typing-indicator";
+  typing.innerHTML = `<span></span><span></span><span></span>`;
+  messages.appendChild(typing);
+  scrollToBottom(messages);
+  return typing;
+}
 
-    localStorage.setItem("chatbotData", JSON.stringify(data))
-    console.log("Chatbot data saved to localStorage")
-  }
-
-  // Load data on initialization
-  loadChatbotData()
-
-  // Open chatbot after 3 seconds
+// Tự động cuộn xuống cuối
+function scrollToBottom(messages) {
   setTimeout(() => {
-    if (!localStorage.getItem("chatbotShown")) {
-      chatbotBox.classList.add("active")
-      localStorage.setItem("chatbotShown", "true")
-    }
-  }, 3000)
+    messages.scrollTop = messages.scrollHeight;
+  }, 100);
+}
 
-  // Toggle chatbot visibility
-  chatbotToggle.addEventListener("click", () => {
-    chatbotBox.classList.toggle("active")
-    chatbotNotification.style.display = "none"
-    scrollToBottom()
-  })
 
-  // Close chatbot
-  chatbotClose.addEventListener("click", () => {
-    chatbotBox.classList.remove("active")
-  })
+async function botReply(msg) {
+  const typing = showTyping();
+  const answer = findAnswer(msg);
+  setTimeout(() => {
+    if (typing) typing.remove();
+    addMessage(answer, "bot");
+  }, 600);
+}
 
-  // Send message when button is clicked
-  sendBtn.addEventListener("click", sendMessage)
+// Xử lý gửi tin nhắn người dùng
+function handleSend() {
+  const box = ensureChatbotBox();
+  if (!box) return;
+  const input = box.querySelector("#user-input");
+  const val = input.value.trim();
+  if (!val) return;
+  addMessage(val, "user");
+  input.value = "";
+  botReply(val);
+}
 
-  // Send message when Enter key is pressed
-  userInput.addEventListener("keypress", (e) => {
-    if (e.key === "Enter") {
-      sendMessage()
-    }
-  })
-
-  let suggestionCooldown = false;
-
-  // Handle suggestion buttons
-  document.addEventListener("click", (e) => {
-    if (e.target.classList.contains("suggestion-btn")) {
-      if (suggestionCooldown) return;
-      suggestionCooldown = true;
-      setTimeout(() => {
-        suggestionCooldown = false;
-      }, 1000);
-
-      const suggestionText = e.target.textContent;
-      userInput.value = suggestionText;
-      sendMessage();
-    }
-  })
-
-  // Function to send message
-  function sendMessage() {
-    const message = userInput.value.trim()
-    if (message === "") return
-
-    // Add user message to chat
-    addMessage(message, "user")
-    userInput.value = ""
-
-    // Show typing indicator
-    showTypingIndicator()
-
-    // Process the message and respond after a delay
-    setTimeout(
-      () => {
-        removeTypingIndicator()
-        const response = getBotResponse(message)
-
-        // Nếu response là mảng, gộp lại thành 1 đoạn văn, mỗi câu xuống dòng
-        if (Array.isArray(response)) {
-          addMessage(response.join("\n"), "bot")
-          addSuggestions()
-        } else {
-          addMessage(response, "bot")
-          addSuggestions()
-        }
-      },
-      1000 + Math.random() * 1000,
-    ) // Random delay between 1-2 seconds
-  }
-
-  // Function to add a message to the chat
-  function addMessage(text, sender) {
-    const messageDiv = document.createElement("div")
-    messageDiv.className = `message ${sender}-message`
-
-    const contentDiv = document.createElement("div")
-    contentDiv.className = "message-content"
-
-    const paragraph = document.createElement("p")
-    // Tự động xuống dòng khi gặp \n hoặc khi có dấu chấm, dấu hỏi, dấu chấm than (nếu cần)
-    paragraph.innerHTML = text
-      .replace(/\n/g, "<br>")
-      .replace(/([^.?!])([.?!])(\s|$)/g, "$1$2<br>$3")
-    contentDiv.appendChild(paragraph)
-
-    const timeSpan = document.createElement("span")
-    timeSpan.className = "message-time"
-    timeSpan.textContent = getCurrentTime()
-
-    messageDiv.appendChild(contentDiv)
-    messageDiv.appendChild(timeSpan)
-
-    chatbotMessages.appendChild(messageDiv)
-    scrollToBottom()
-  }
-
-  // Function to add suggestion buttons
-  function addSuggestions() {
-    const suggestions = Object.keys(knowledgeBase).filter((key) => key !== "xin chào" && key !== "tạm biệt")
-    const randomSuggestions = suggestions.sort(() => 0.5 - Math.random()).slice(0, 4)
-
-    const messageDiv = document.createElement("div")
-    messageDiv.className = "message bot-message"
-
-    // Tạo khối suggestion có thể ẩn/hiện
-    const contentDiv = document.createElement("div")
-    contentDiv.className = "message-content"
-    contentDiv.id = "messageContent" + Date.now() // Đảm bảo id duy nhất nếu nhiều khối
-    contentDiv.style.display = "none" // Mặc định ẩn
-
-    // Header với nút đóng
-    const headSuggestion = document.createElement("div")
-    headSuggestion.className = "head-suggestion"
-
-    const paragraph = document.createElement("p")
-    paragraph.textContent = "Bạn có thể quan tâm đến: "
-    headSuggestion.appendChild(paragraph)
-
-    const closeBtn = document.createElement("i")
-    closeBtn.className = "fas fa-times"
-    closeBtn.style.cursor = "pointer"
-    closeBtn.addEventListener("click", function () {
-      contentDiv.style.display = "none"
-      openBtn.style.display = "inline-block"
-    })
-    closeBtn.id = "closeSuggestions" + Date.now()
-    headSuggestion.appendChild(closeBtn)
-
-    contentDiv.appendChild(headSuggestion)
-
-    // Danh sách gợi ý
-    const suggestionsList = document.createElement("ul")
-    suggestionsList.className = "chatbot-suggestions"
-
-    randomSuggestions.forEach((suggestion) => {
-      const li = document.createElement("li")
-      const button = document.createElement("button")
-      button.className = "suggestion-btn"
-      button.textContent = suggestion.charAt(0).toUpperCase() + suggestion.slice(1)
-      li.appendChild(button)
-      suggestionsList.appendChild(li)
-    })
-
-    contentDiv.appendChild(suggestionsList)
-
-    // Nút mở lại suggestion
-    const openBtn = document.createElement("button")
-    openBtn.innerHTML = '<i class="fas fa-comment-dots"></i> Gợi ý'
-    openBtn.className = "open-suggestion-btn"
-    openBtn.style.display = "inline-block" // Mặc định hiện nút này
-    openBtn.addEventListener("click", function () {
-      contentDiv.style.display = "block"
-      openBtn.style.display = "none"
-      // Tự động cuộn xuống dưới khi mở gợi ý
-      setTimeout(scrollToBottom, 100)
-    })
-    openBtn.id = "openSuggestions" + Date.now()
-
-    // Thêm thời gian
-    const timeSpan = document.createElement("span")
-    timeSpan.className = "message-time"
-    timeSpan.textContent = getCurrentTime()
-
-    messageDiv.appendChild(contentDiv)
-    messageDiv.appendChild(openBtn)
-    messageDiv.appendChild(timeSpan)
-
-    chatbotMessages.appendChild(messageDiv)
-    scrollToBottom()
-  }
-
-  // Function to show typing indicator
-  function showTypingIndicator() {
-    const typingDiv = document.createElement("div")
-    typingDiv.className = "typing-indicator"
-    typingDiv.id = "typing-indicator"
-
-    for (let i = 0; i < 3; i++) {
-      const dot = document.createElement("span")
-      typingDiv.appendChild(dot)
-    }
-
-    chatbotMessages.appendChild(typingDiv)
-    scrollToBottom()
-  }
-
-  // Function to remove typing indicator
-  function removeTypingIndicator() {
-    const typingIndicator = document.getElementById("typing-indicator")
-    if (typingIndicator) {
-      typingIndicator.remove()
-    }
-  }
-
-  // Function to get bot response based on user input
-  function getBotResponse(userMessage) {
-    const message = userMessage.toLowerCase()
-    for (const key in knowledgeBase) {
-      if (message === key) {
-        return knowledgeBase[key]
+// Sự kiện toggle chatbot
+function setupChatbotToggle() {
+  const toggle = document.querySelector(".chatbot-toggle");
+  if (!toggle) return;
+  toggle.onclick = () => {
+    const box = ensureChatbotBox();
+    if (!box) return;
+    // Đảm bảo luôn hiển thị bot-box khi click
+    box.style.display = "flex";
+    box.classList.add("active");
+    const noti = document.querySelector(".chatbot-notification");
+    if (noti) noti.style.display = "none";
+    setTimeout(() => {
+      // Chỉ renderHistory nếu chưa có message nào
+      const messages = box.querySelector(".chatbot-messages");
+      if (messages && messages.children.length === 0) {
+        renderHistory();
       }
-    }
-    return defaultResponses[Math.floor(Math.random() * defaultResponses.length)]
+      const input = box.querySelector("#user-input");
+      if (input) input.focus();
+    }, 200);
+  };
+}
+
+// Sự kiện đóng chatbot
+function setupChatbotClose() {
+  const box = ensureChatbotBox();
+  if (!box) return;
+  const closeBtn = box.querySelector(".chatbot-close");
+  if (closeBtn) {
+    closeBtn.onclick = () => {
+      box.classList.remove("active");
+      box.style.display = "none";
+    };
   }
+}
 
-  // Function to get current time in HH:MM format
-  function getCurrentTime() {
-    const now = new Date()
-    const hours = now.getHours().toString().padStart(2, "0")
-    const minutes = now.getMinutes().toString().padStart(2, "0")
-    return `${hours}:${minutes}`
-  }
-
-  // Function to scroll to the bottom of the chat
-  function scrollToBottom() {
-    chatbotMessages.scrollTop = chatbotMessages.scrollHeight
-  }
-
-  // Advanced features - Voice recognition (if supported by browser)
-  if ("webkitSpeechRecognition" in window || "SpeechRecognition" in window) {
-    // Create voice button
-    const voiceBtn = document.createElement("button")
-    voiceBtn.innerHTML = '<i class="fas fa-microphone"></i>'
-    voiceBtn.className = "voice-btn"
-    voiceBtn.style.backgroundColor = "#f5f5f5"
-    voiceBtn.style.color = "#FFFFFF"
-    voiceBtn.style.border = "none"
-    voiceBtn.style.width = "40px"
-    voiceBtn.style.height = "40px"
-    voiceBtn.style.borderRadius = "50%"
-    voiceBtn.style.cursor = "pointer"
-
-    // Insert before send button
-    const chatbotInput = document.querySelector(".chatbot-input")
-    chatbotInput.insertBefore(voiceBtn, sendBtn)
-
-    // Initialize speech recognition
-    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition
-    const recognition = new SpeechRecognition()
-    recognition.lang = "vi-VN"
-    recognition.continuous = false
-
-    voiceBtn.addEventListener("click", () => {
-      recognition.start()
-      voiceBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>'
-      voiceBtn.style.backgroundColor = "#ff4757"
-      voiceBtn.style.color = "white"
-    })
-
-    recognition.onresult = (event) => {
-      const transcript = event.results[0][0].transcript
-      userInput.value = transcript
-      voiceBtn.innerHTML = '<i class="fas fa-microphone"></i>'
-      voiceBtn.style.backgroundColor = "#f5f5f5"
-      voiceBtn.style.color = "#004080"
-
-      // Send the message after a short delay
-      setTimeout(() => {
-        sendMessage()
-      }, 500)
-    }
-
-    recognition.onend = () => {
-      voiceBtn.innerHTML = '<i class="fas fa-microphone"></i>'
-      voiceBtn.style.backgroundColor = "#f5f5f5"
-      voiceBtn.style.color = "#004080"
-    }
-
-    recognition.onerror = () => {
-      voiceBtn.innerHTML = '<i class="fas fa-microphone"></i>'
-      voiceBtn.style.backgroundColor = "#f5f5f5"
-      voiceBtn.style.color = "#004080"
-    }
-  }
-
-  // Save chat history to localStorage
-  function saveChatHistory() {
-    const messages = chatbotMessages.innerHTML
-    localStorage.setItem("chatHistory", messages)
-  }
-
-  // Load chat history from localStorage
-  function loadChatHistory() {
-    const history = localStorage.getItem("chatHistory")
-    if (history) {
-      chatbotMessages.innerHTML = history
-    }
-  }
-
-  // Save chat history when window is closed
-  window.addEventListener("beforeunload", saveChatHistory)
-
-  // Load chat history when page is loaded
-  // loadChatHistory()
-
-  // Expose functions for the training interface
-  window.chatbotAPI = {
-    addIntent: (intent, phrases, response) => {
-      knowledgeBase[intent] = Array.isArray(response) ? response : [response]
-      saveChatbotData()
-      return true
-    },
-
-    removeIntent: (intent) => {
-      if (knowledgeBase[intent]) {
-        delete knowledgeBase[intent]
-        saveChatbotData()
-        return true
+// Sự kiện gửi tin nhắn (nút gửi và Enter)
+function setupSendEvents() {
+  const box = ensureChatbotBox();
+  if (!box) return;
+  const input = box.querySelector("#user-input");
+  const sendBtn = box.querySelector("#send-btn");
+  if (sendBtn) sendBtn.onclick = handleSend;
+  if (input) {
+    input.onkeypress = (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        handleSend();
       }
-      return false
-    },
-
-    updateIntent: (intent, phrases, response) => {
-      if (knowledgeBase[intent]) {
-        knowledgeBase[intent] = Array.isArray(response) ? response : [response]
-        saveChatbotData()
-        return true
-      }
-      return false
-    },
-
-    getIntents: () =>
-      Object.keys(knowledgeBase).map((intent) => ({
-        name: intent,
-        response: knowledgeBase[intent],
-      })),
-
-    setDefaultResponses: (responses) => {
-      defaultResponses = responses
-      saveChatbotData()
-    },
-
-    setThreshold: (threshold) => {
-      chatbotSettings.threshold = threshold
-      saveChatbotData()
-    },
-
-    trainModel: () => {
-      // Simple TF-IDF based model training
-      const model = {}
-
-      // For each intent, create a vector of token weights
-      for (const intent in knowledgeBase) {
-        model[intent] = {}
-
-        // Use the intent name itself as training data
-        const intentTokens = tokenize(intent)
-        for (const token of intentTokens) {
-          model[intent][token] = (model[intent][token] || 0) + 3 // Higher weight for intent tokens
-        }
-      }
-
-      chatbotSettings.model = model
-      saveChatbotData()
-      return true
-    },
-
-    exportData: () => ({
-      knowledgeBase: knowledgeBase,
-      defaultResponses: defaultResponses,
-      settings: chatbotSettings,
-    }),
-
-    importData: (data) => {
-      if (data.knowledgeBase) knowledgeBase = data.knowledgeBase
-      if (data.defaultResponses) defaultResponses = data.defaultResponses
-      if (data.settings) chatbotSettings = data.settings
-      saveChatbotData()
-      return true
-    },
+    };
   }
-})
+}
+
+// Hiển thị lịch sử chat khi mở lại bot
+function renderHistory() {
+  const box = ensureChatbotBox();
+  if (!box) return;
+  const messages = box.querySelector(".chatbot-messages");
+  messages.innerHTML = "";
+  let history = [];
+  try {
+    history = JSON.parse(localStorage.getItem("chatbot_history") || "[]");
+  } catch {}
+  if (history.length === 0) {
+    // Nếu chưa có lịch sử, chỉ hiển thị câu chào, KHÔNG có gợi ý
+    let btnStyle = `
+      style="
+        border:none;
+        background:transparent;
+        border-radius:50%;
+        width:25px;
+        height:25px;
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        font-size:12px;
+        color:#666;
+        cursor:pointer;
+        transition:background 0.18s;
+      "
+      onmouseover="this.style.background='#f0f2f6';"
+      onmouseout="this.style.background='transparent';"
+    `;
+    messages.innerHTML = `
+      <div class="message bot-message" data-time="${formatTime(new Date())}">
+        <div style="text-align:center;margin:8px 0 2px 0;font-size:12px;color:#888;width:100%">${formatTime(new Date())}</div>
+        <div style="display:flex;align-items:flex-end;">
+          <img src="/img/logo.png" alt="bot" class="chatbot-avatar" style="width:30px;height:30px;margin-right:6px;">
+          <div style="flex:1">
+            <div class="message-content" id="welcome-message" style="display:inline-block;padding:10px 18px;max-width:80%;word-break:break-word;font-size:15px;background:#fff;color:#031B88;box-shadow:0 1px 2px rgba(0,0,0,0.08);margin-bottom:2px;margin-top:2px;text-align:left;">
+              Xin chào! Tôi là trợ lý ảo của Bộ môn CNTT - ĐH Tây Nguyên. Tôi có thể giúp gì cho bạn?
+            </div>
+            <div class="message-time">
+              <button class="copy-btn" title="Copy" ${btnStyle}><i class="fas fa-copy"></i></button>
+              <span class="react-btns">
+                <button class="react-like" title="Hữu ích" ${btnStyle}><i class="fas fa-thumbs-up"></i></button>
+                <button class="react-dislike" title="Chưa tốt" ${btnStyle}><i class="fas fa-thumbs-down"></i></button>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+    // Copy event cho câu chào
+    messages.querySelectorAll(".copy-btn").forEach(btn => {
+      btn.onclick = () => {
+        const content = messages.querySelector("#welcome-message").innerText;
+        navigator.clipboard.writeText(content);
+        btn.innerHTML = '<i class="fas fa-check"></i>';
+        setTimeout(() => (btn.innerHTML = '<i class="fas fa-copy"></i>'), 1000);
+      };
+    });
+    // React event cho câu chào
+    messages.querySelectorAll(".react-like").forEach(btn => {
+      btn.onclick = () => {
+        btn.style.color = "#2ecc40";
+        btn.disabled = true;
+      };
+    });
+    messages.querySelectorAll(".react-dislike").forEach(btn => {
+      btn.onclick = () => {
+        btn.style.color = "#e74c3c";
+        btn.disabled = true;
+      };
+    });
+    return;
+  }
+  history.forEach(item => {
+    addMessage(item.msg, item.sender, new Date(item.time), false);
+  });
+}
+
+// Khởi tạo lại các sự kiện khi DOM ready
+function setupChatbot() {
+  setupChatbotToggle();
+  setupChatbotClose();
+  setupSendEvents();
+}
+
+// Đảm bảo khi reload lại DOM hoặc chatbot-box bị đóng/mở lại thì các sự kiện vẫn hoạt động
+document.addEventListener("DOMContentLoaded", () => {
+  setupChatbot();
+  // Nếu chatbot-box được render lại (hiếm), gán lại sự kiện
+  const observer = new MutationObserver(() => {
+    setupChatbot();
+  });
+  observer.observe(document.body, { childList: true, subtree: true });
+});
