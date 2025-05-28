@@ -1,11 +1,12 @@
 import { findAnswer } from "./knowledgeBase.js";
 localStorage.clear()
-// Helper: format time
+
+// Định dạng giờ phút
 function formatTime(date) {
   return date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 }
 
-// Markdown parser (cơ bản: **bold**, [link](url), *italic*, - list)
+// Xử lý markdown đơn giản
 function parseMarkdown(text) {
   let html = text
     .replace(/(?:\r\n|\r|\n)/g, "<br>")
@@ -13,11 +14,9 @@ function parseMarkdown(text) {
     .replace(/\*(.*?)\*/g, "<i>$1</i>")
     .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>')
     .replace(/^- (.*)$/gm, '<li>$1</li>');
-  // wrap <li> in <ul> if any
   if (html.includes("<li>")) html = "<ul>" + html + "</ul>";
   return html;
 }
-
 
 // Lưu lịch sử chat vào localStorage
 function saveHistory(msg, sender) {
@@ -30,24 +29,22 @@ function saveHistory(msg, sender) {
   localStorage.setItem("chatbot_history", JSON.stringify(history));
 }
 
+// Lấy khung chat
 function ensureChatbotBox() {
   let box = document.querySelector(".chatbot-box");
   if (box) return box;
-  // Nếu bị xóa khỏi DOM, tạo lại từ đầu
   const container = document.querySelector(".chatbot-container");
   if (!container) return null;
-  // (Không tạo lại vì đã có sẵn trong index.html)
   return document.querySelector(".chatbot-box");
 }
 
-// Thêm tin nhắn vào khung chat (hỗ trợ markdown, avatar, copy, resend)
+// Thêm tin nhắn vào khung chat
 function addMessage(text, sender, time = new Date(), save = true) {
   const box = ensureChatbotBox();
   if (!box) return;
   const messages = box.querySelector(".chatbot-messages");
   const msgDiv = document.createElement("div");
   msgDiv.className = `message ${sender}-message`;
-  // Avatar
   let avatar = sender === "bot"
     ? `<img src="/img/logo.png" alt="bot" class="chatbot-avatar" style="width:30px;height:30px;margin-right:6px;">`
     : `<i class="fas fa-user-circle" style="font-size:28px;color:#0072ff;margin-left:6px;"></i>`;
@@ -64,7 +61,6 @@ function addMessage(text, sender, time = new Date(), save = true) {
     justify-content:center;
     font-size:12px;
     color:#666;
-    
     cursor:pointer;
     transition:background 0.18s;
   `;
@@ -116,7 +112,6 @@ function addMessage(text, sender, time = new Date(), save = true) {
     text-align:left;
   `;
   if (sender === "user") {
-    // User: nội dung bên trái, avatar bên phải
     msgDiv.innerHTML = `
       ${timeDiv}
       <div style="display:flex;align-items:center;justify-content:flex-end;">
@@ -128,7 +123,6 @@ function addMessage(text, sender, time = new Date(), save = true) {
       </div>
     `;
   } else {
-    // Bot: avatar bên trái, nội dung bên phải
     msgDiv.innerHTML = `
       ${timeDiv}
       <div style="display:flex;align-items:flex-end;">
@@ -142,7 +136,8 @@ function addMessage(text, sender, time = new Date(), save = true) {
   }
   messages.appendChild(msgDiv);
   scrollToBottom(messages);
-  // Copy event
+
+  // Sự kiện copy nội dung
   msgDiv.querySelectorAll(".copy-btn").forEach(btn => {
     btn.onclick = () => {
       const content = msgDiv.querySelector(".message-content").innerText;
@@ -151,7 +146,7 @@ function addMessage(text, sender, time = new Date(), save = true) {
       setTimeout(() => (btn.innerHTML = '<i class="fas fa-copy"></i>'), 1000);
     };
   });
-  // Resend event
+  // Sự kiện gửi lại
   msgDiv.querySelectorAll(".resend-btn").forEach(btn => {
     btn.onclick = () => {
       const content = msgDiv.querySelector(".message-content").innerText;
@@ -159,10 +154,9 @@ function addMessage(text, sender, time = new Date(), save = true) {
       botReply(content);
     };
   });
-  // React event
+  // Sự kiện like/dislike
   msgDiv.querySelectorAll(".react-like, .react-dislike").forEach(btn => {
     btn.onclick = () => {
-      // Disable only the other button, not both
       if (btn.classList.contains("react-like")) {
         btn.style.color = "#2ecc40";
         btn.disabled = true;
@@ -200,14 +194,14 @@ function showTyping() {
   return typing;
 }
 
-// Tự động cuộn xuống cuối
+// Cuộn xuống cuối khung chat
 function scrollToBottom(messages) {
   setTimeout(() => {
     messages.scrollTop = messages.scrollHeight;
   }, 100);
 }
 
-
+// Trả lời tự động
 async function botReply(msg) {
   const typing = showTyping();
   const answer = findAnswer(msg);
@@ -229,20 +223,18 @@ function handleSend() {
   botReply(val);
 }
 
-// Sự kiện toggle chatbot
+// Sự kiện mở bot
 function setupChatbotToggle() {
   const toggle = document.querySelector(".chatbot-toggle");
   if (!toggle) return;
   toggle.onclick = () => {
     const box = ensureChatbotBox();
     if (!box) return;
-    // Đảm bảo luôn hiển thị bot-box khi click
     box.style.display = "flex";
     box.classList.add("active");
     const noti = document.querySelector(".chatbot-notification");
     if (noti) noti.style.display = "none";
     setTimeout(() => {
-      // Chỉ renderHistory nếu chưa có message nào
       const messages = box.querySelector(".chatbot-messages");
       if (messages && messages.children.length === 0) {
         renderHistory();
@@ -253,7 +245,7 @@ function setupChatbotToggle() {
   };
 }
 
-// Sự kiện đóng chatbot
+// Sự kiện đóng bot
 function setupChatbotClose() {
   const box = ensureChatbotBox();
   if (!box) return;
@@ -294,7 +286,6 @@ function renderHistory() {
     history = JSON.parse(localStorage.getItem("chatbot_history") || "[]");
   } catch {}
   if (history.length === 0) {
-    // Nếu chưa có lịch sử, chỉ hiển thị câu chào, KHÔNG có gợi ý
     let btnStyle = `
       style="
         border:none;
@@ -333,7 +324,6 @@ function renderHistory() {
         </div>
       </div>
     `;
-    // Copy event cho câu chào
     messages.querySelectorAll(".copy-btn").forEach(btn => {
       btn.onclick = () => {
         const content = messages.querySelector("#welcome-message").innerText;
@@ -342,7 +332,6 @@ function renderHistory() {
         setTimeout(() => (btn.innerHTML = '<i class="fas fa-copy"></i>'), 1000);
       };
     });
-    // React event cho câu chào
     messages.querySelectorAll(".react-like").forEach(btn => {
       btn.onclick = () => {
         btn.style.color = "#2ecc40";
@@ -362,17 +351,16 @@ function renderHistory() {
   });
 }
 
-// Khởi tạo lại các sự kiện khi DOM ready
+// Khởi tạo bot và các sự kiện
 function setupChatbot() {
   setupChatbotToggle();
   setupChatbotClose();
   setupSendEvents();
 }
 
-// Đảm bảo khi reload lại DOM hoặc chatbot-box bị đóng/mở lại thì các sự kiện vẫn hoạt động
+// Đảm bảo bot hoạt động khi DOM ready
 document.addEventListener("DOMContentLoaded", () => {
   setupChatbot();
-  // Nếu chatbot-box được render lại (hiếm), gán lại sự kiện
   const observer = new MutationObserver(() => {
     setupChatbot();
   });

@@ -76,11 +76,12 @@ document.addEventListener("DOMContentLoaded", () => {
     })
   })
 
-  // Search button functionality (tìm kiếm toàn bộ nội dung trên web)
+  // Tìm kiếm toàn bộ nội dung trên web
   const searchButton = document.querySelector(".search-button")
   const searchIcon = document.querySelector(".search-icon")
   let searchInput = document.querySelector(".search-input")
   if (!searchInput) {
+    // Tạo input tìm kiếm nếu chưa có
     searchInput = document.createElement("input")
     searchInput.type = "text"
     searchInput.placeholder = "Tìm kiếm..."
@@ -101,21 +102,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let originalMainHTML = null
 
+  // Bôi vàng từ khóa tìm kiếm
   function highlightKeyword(html, keyword) {
     if (!keyword) return html
-    // Escape keyword for regex
     const safeKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
     const regex = new RegExp(`(${safeKeyword})`, "gi")
     return html.replace(regex, '<span class="search-highlight">$1</span>')
   }
 
+  // Hiển thị kết quả tìm kiếm
   function showSearchResults(keyword) {
     const main = document.querySelector("main")
     if (!originalMainHTML) originalMainHTML = main.innerHTML
 
-    // Ẩn toàn bộ nội dung cũ trong main khi tìm kiếm
+    // Ẩn toàn bộ nội dung cũ, xóa luôn banner chào nếu có
     Array.from(main.children).forEach(child => {
-      // Ẩn tất cả, riêng .welcome-banner thì xóa luôn khỏi DOM
       if (child.classList && child.classList.contains("welcome-banner")) {
         child.remove();
       } else {
@@ -123,16 +124,14 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
 
-    // Tìm tất cả các phần tử có chứa từ khóa (không chỉ news-item)
+    // Tìm tất cả các phần tử có chứa từ khóa (trừ header/footer/nav)
     const tempDiv = document.createElement("div")
     tempDiv.innerHTML = originalMainHTML
-
-    // Duyệt toàn bộ các phần tử có textContent chứa từ khóa (không loại bỏ theo class, chỉ bỏ header/footer/nav)
     const allNodes = tempDiv.querySelectorAll("*")
     const matches = []
     const added = new Set()
     allNodes.forEach(node => {
-      // Loại bỏ các node nằm trong header, footer, nav
+      // Bỏ qua các node nằm trong header, footer, nav
       const skip = node.closest('header, footer, nav')
       if (
         !skip &&
@@ -141,7 +140,7 @@ document.addEventListener("DOMContentLoaded", () => {
         node.textContent.trim() !== "" &&
         node.textContent.toLowerCase().includes(keyword.toLowerCase())
       ) {
-        // Lấy phần tử cha gần nhất là .news-item nếu có, nếu không thì lấy chính node
+        // Ưu tiên lấy .news-item, nếu không có thì lấy chính node
         let container = node.closest('.news-item')
         if (!container) container = node
         const html = highlightKeyword(container.outerHTML, keyword)
@@ -152,7 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     })
 
-    // Tạo vùng kết quả tìm kiếm mới, không thay thế vào layout cũ
+    // Hiển thị kết quả tìm kiếm
     const resultTitle = `
       <div class="search-results-container">
         <div class="search-results-title">
@@ -166,12 +165,11 @@ document.addEventListener("DOMContentLoaded", () => {
         <button class="search-back-btn">Quay lại</button>
       </div>
     `
-    // Thêm vùng kết quả vào main
     const resultDiv = document.createElement("div")
     resultDiv.innerHTML = resultTitle
     main.appendChild(resultDiv)
 
-    // Xử lý nút quay lại
+    // Nút quay lại: khôi phục lại giao diện ban đầu
     document.querySelector(".search-back-btn").onclick = function () {
       resultDiv.remove();
       Array.from(main.children).forEach(child => {
@@ -183,8 +181,8 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   if (searchButton) {
+    // Sự kiện click nút tìm kiếm
     searchButton.addEventListener("click", () => {
-      // Toggle input
       if (searchInput.style.display === "none") {
         searchInput.style.display = "inline-block"
         searchInput.focus()
@@ -192,7 +190,7 @@ document.addEventListener("DOMContentLoaded", () => {
         searchInput.style.display = "none"
       }
     })
-    // Khi nhấn Enter trong input thì tìm kiếm
+    // Sự kiện nhấn Enter để tìm kiếm
     searchInput.addEventListener("keypress", function (e) {
       if (e.key === "Enter") {
         const keyword = searchInput.value.trim()
@@ -203,7 +201,7 @@ document.addEventListener("DOMContentLoaded", () => {
     })
   }
 
-  // Add smooth scrolling for anchor links
+  // Smooth scroll cho anchor
   document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
     anchor.addEventListener("click", function (e) {
       const href = this.getAttribute("href")
@@ -221,7 +219,7 @@ document.addEventListener("DOMContentLoaded", () => {
     })
   })
 
-  // Add active class to current page in navigation
+  // Active nav
   const currentLocation = window.location.pathname
   const navLinks = document.querySelectorAll(".nav-link")
 

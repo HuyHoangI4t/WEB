@@ -418,7 +418,7 @@ img {
   font-weight: 500;
   cursor: pointer;
   box-shadow: 0 2px 12px #99ccff44;
-  transition: background 0.2s, box-shadow 0.2s;
+  transition: 0.2s, box-shadow 0.2s;
 }
 .search-back-btn:hover {
   background: linear-gradient(90deg, #005bb5 60%, #0072ff 100%);

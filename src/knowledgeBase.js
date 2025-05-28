@@ -1,3 +1,4 @@
+// Danh sách từ khóa và câu trả lời cho chatbot
 export const knowledgeBase = [
   {
     keywords: ["giới thiệu", "bộ môn", "cntt", "công nghệ thông tin", "giới thiệu cntt", "giới thiệu bộ môn cntt"],
@@ -186,7 +187,7 @@ export const knowledgeBase = [
   // ...bạn có thể bổ sung thêm nữa nếu muốn...
 ];
 
-export const defaultAnswer = 
+export const defaultAnswer =
 `Tôi là trợ lý ảo của Bộ môn CNTT. Bạn có thể hỏi tôi về mọi kiến thức chuyên ngành Công nghệ Thông tin như:
 - Lập trình (C/C++, Java, Python, Web, Mobile, v.v.)
 - Cơ sở dữ liệu, SQL, NoSQL
@@ -195,6 +196,7 @@ export const defaultAnswer =
 - Các vấn đề học tập, thực tập, nghiên cứu khoa học, tài liệu, hướng nghiệp, kỹ năng mềm, v.v.
 Hãy đặt câu hỏi cụ thể về lĩnh vực CNTT bạn quan tâm, tôi sẽ cố gắng hỗ trợ hoặc hướng dẫn bạn tìm kiếm tài liệu phù hợp!`;
 
+// Hàm tìm câu trả lời phù hợp
 export function findAnswer(message) {
   const msg = message.toLowerCase();
   for (const item of knowledgeBase) {
