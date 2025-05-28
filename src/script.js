@@ -30,7 +30,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const mobileMenuHeader = document.createElement("div")
     mobileMenuHeader.className = "mobile-menu-header"
 
+    // Hiện logo và nút đóng ngang hàng
     const logo = document.querySelector(".logo img").cloneNode(true)
+    mobileMenuHeader.appendChild(logo)
 
     const closeButton = document.createElement("button")
     closeButton.className = "mobile-menu-close"
@@ -38,8 +40,6 @@ document.addEventListener("DOMContentLoaded", () => {
     closeButton.addEventListener("click", () => {
       mobileMenu.classList.remove("active")
     })
-
-    mobileMenuHeader.appendChild(logo)
     mobileMenuHeader.appendChild(closeButton)
 
     // Clone navigation
@@ -76,11 +76,130 @@ document.addEventListener("DOMContentLoaded", () => {
     })
   })
 
-  // Search button functionality
+  // Search button functionality (tìm kiếm toàn bộ nội dung trên web)
   const searchButton = document.querySelector(".search-button")
+  const searchIcon = document.querySelector(".search-icon")
+  let searchInput = document.querySelector(".search-input")
+  if (!searchInput) {
+    searchInput = document.createElement("input")
+    searchInput.type = "text"
+    searchInput.placeholder = "Tìm kiếm..."
+    searchInput.className = "search-input"
+    searchInput.style.display = "inline-block"
+    searchInput.style.marginLeft = "10px"
+    searchInput.style.marginRight = "20px"
+    searchInput.style.padding = "6px 10px"
+    searchInput.style.borderRadius = "16px"
+    searchInput.style.border = "1px solid #ccc"
+    searchInput.style.fontSize = "14px"
+    searchInput.style.width = "200px"
+    searchInput.style.transition = "all 0.2s"
+    searchIcon.style.display = "flex"
+    searchIcon.style.alignItems = "center"
+    searchIcon.appendChild(searchInput)
+  }
+
+  let originalMainHTML = null
+
+  function highlightKeyword(html, keyword) {
+    if (!keyword) return html
+    // Escape keyword for regex
+    const safeKeyword = keyword.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    const regex = new RegExp(`(${safeKeyword})`, "gi")
+    return html.replace(regex, '<span class="search-highlight">$1</span>')
+  }
+
+  function showSearchResults(keyword) {
+    const main = document.querySelector("main")
+    if (!originalMainHTML) originalMainHTML = main.innerHTML
+
+    // Ẩn toàn bộ nội dung cũ trong main khi tìm kiếm
+    Array.from(main.children).forEach(child => {
+      // Ẩn tất cả, riêng .welcome-banner thì xóa luôn khỏi DOM
+      if (child.classList && child.classList.contains("welcome-banner")) {
+        child.remove();
+      } else {
+        child.style.display = "none";
+      }
+    });
+
+    // Tìm tất cả các phần tử có chứa từ khóa (không chỉ news-item)
+    const tempDiv = document.createElement("div")
+    tempDiv.innerHTML = originalMainHTML
+
+    // Duyệt toàn bộ các phần tử có textContent chứa từ khóa (không loại bỏ theo class, chỉ bỏ header/footer/nav)
+    const allNodes = tempDiv.querySelectorAll("*")
+    const matches = []
+    const added = new Set()
+    allNodes.forEach(node => {
+      // Loại bỏ các node nằm trong header, footer, nav
+      const skip = node.closest('header, footer, nav')
+      if (
+        !skip &&
+        node.children.length === 0 &&
+        node.textContent &&
+        node.textContent.trim() !== "" &&
+        node.textContent.toLowerCase().includes(keyword.toLowerCase())
+      ) {
+        // Lấy phần tử cha gần nhất là .news-item nếu có, nếu không thì lấy chính node
+        let container = node.closest('.news-item')
+        if (!container) container = node
+        const html = highlightKeyword(container.outerHTML, keyword)
+        if (!added.has(html)) {
+          matches.push(html)
+          added.add(html)
+        }
+      }
+    })
+
+    // Tạo vùng kết quả tìm kiếm mới, không thay thế vào layout cũ
+    const resultTitle = `
+      <div class="search-results-container">
+        <div class="search-results-title">
+          <b>Kết quả tìm kiếm cho:</b> "<span style='color:#0072ff'>${keyword}</span>"
+        </div>
+        ${
+          matches.length === 0
+            ? `<div style="font-size:15px;color:#888;margin-bottom:24px;">Không tìm thấy kết quả phù hợp.</div>`
+            : `<div class="news-grid search-news-grid">${matches.join("")}</div>`
+        }
+        <button class="search-back-btn">Quay lại</button>
+      </div>
+    `
+    // Thêm vùng kết quả vào main
+    const resultDiv = document.createElement("div")
+    resultDiv.innerHTML = resultTitle
+    main.appendChild(resultDiv)
+
+    // Xử lý nút quay lại
+    document.querySelector(".search-back-btn").onclick = function () {
+      resultDiv.remove();
+      Array.from(main.children).forEach(child => {
+        child.style.display = "";
+      });
+      searchInput.value = "";
+      searchInput.style.display = "none";
+    }
+  }
+
   if (searchButton) {
     searchButton.addEventListener("click", () => {
-      alert("Chức năng tìm kiếm sẽ được phát triển sau!")
+      // Toggle input
+      if (searchInput.style.display === "none") {
+        searchInput.style.display = "inline-block"
+        searchInput.focus()
+      } else {
+        searchInput.style.display = "none"
+      }
+    })
+    // Khi nhấn Enter trong input thì tìm kiếm
+    searchInput.addEventListener("keypress", function (e) {
+      if (e.key === "Enter") {
+        const keyword = searchInput.value.trim()
+        if (keyword) {
+          showSearchResults(keyword)
+        }
+      }
     })
   }
 

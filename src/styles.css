@@ -388,6 +388,90 @@ img {
   text-align: center;
 }
 
+/* Search results container and title - tối ưu lại giao diện sau khi tìm kiếm */
+.search-results-container {
+  padding: 32px 0 40px 0;
+  max-width: 1100px;
+  margin: 0 auto 0 auto;
+  background: #f8fbff;
+  border-radius: 12px;
+  box-shadow: 0 2px 16px #99ccff22;
+  overflow: hidden;
+}
+.search-results-title {
+  font-size: 26px;
+  font-weight: 700;
+  color: #003366;
+  margin-bottom: 28px;
+  text-align: center;
+  letter-spacing: 0.5px;
+}
+.search-back-btn {
+  margin: 32px auto 0 auto;
+  display: block;
+  padding: 12px 36px;
+  background: linear-gradient(90deg, #0072ff 60%, #005bb5 100%);
+  color: #fff;
+  border: none;
+  border-radius: 22px;
+  font-size: 17px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 2px 12px #99ccff44;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.search-back-btn:hover {
+  background: linear-gradient(90deg, #005bb5 60%, #0072ff 100%);
+  box-shadow: 0 4px 16px #99ccff66;
+}
+
+/* Chỉ style cho phần lưới kết quả tìm kiếm */
+.search-news-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 28px;
+  margin-bottom: 36px;
+}
+@media (min-width: 600px) {
+  .search-news-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (min-width: 992px) {
+  .search-news-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+.search-news-grid .news-item {
+  margin: 0;
+  border: 1px solid #99ccff;
+  border-radius: 10px;
+  overflow: hidden;
+  transition: box-shadow 0.3s, border 0.2s;
+  background: #fff;
+}
+.search-news-grid .news-item:hover {
+  box-shadow: 0 6px 18px #99ccff44;
+  border: 1.5px solid #0072ff;
+}
+
+/* Highlight for search keyword */
+.search-highlight {
+  background-color: #cce6ff;
+  color: #003366;
+  font-weight: 600;
+  border-radius: 4px;
+  padding: 0 3px;
+  box-shadow: none;
+  display: inline;
+  font-weight: bold;
+}
+
+/* Ẩn các phần tử không phải là .news-item trong search-news-grid */
+.search-news-grid > :not(.news-item) {
+  display: none !important;
+}
+
 @media (min-width: 768px) {
   .news-grid {
     grid-template-columns: repeat(2, 1fr);
