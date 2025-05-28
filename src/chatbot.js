@@ -1,4 +1,4 @@
-import { findAnswer } from "./knowledgeBase.js";
+import { findAnswer } from "./data.js";
 localStorage.clear()
 
 // Định dạng giờ phút
