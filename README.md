@@ -40,7 +40,7 @@ Website chính thức của Bộ môn Công nghệ Thông tin, Khoa Khoa học T
 
 - Chatbot hỗ trợ hỏi đáp tự động về CNTT, tuyển sinh, đào tạo, tiện ích, v.v.
 - Có thể mở/đóng, copy nội dung, gửi lại câu hỏi, đánh giá phản hồi.
-- Dữ liệu chatbot mở rộng dễ dàng qua file `knowledgeBase.js`.
+- Dữ liệu chatbot mở rộng dễ dàng qua file `data.js`.
 
 ## 📞 Liên hệ
 
