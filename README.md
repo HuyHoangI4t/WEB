@@ -24,7 +24,7 @@ Website chính thức của Bộ môn Công nghệ Thông tin, Khoa Khoa học T
 - **img/**: Chứa toàn bộ hình ảnh sử dụng trên website.
 
 ## ⚡️ Công nghệ sử dụng
-
+ 
 - HTML5, CSS3 (Flexbox, Grid, Responsive)
 - JavaScript ES6 (module, DOM, localStorage)
 - Font Awesome, Google Fonts (Roboto)
@@ -44,7 +44,7 @@ Website chính thức của Bộ môn Công nghệ Thông tin, Khoa Khoa học T
 
 ## 📞 Liên hệ
 
-- **Website:** [https://www.ttn.edu.vn/index.php/bmktn/ktnbmtin](https://www.ttn.edu.vn/index.php/bmktn/ktnbmtin)
+- **Website:** [www.ttn.edu.vn//bmktn/ktnbmtin](https://www.ttn.edu.vn/index.php/bmktn/ktnbmtin)
 - **Email:** khoakhtncn@ttn.edu.vn
 - **Facebook:** [facebook.com/dhtn567](https://www.facebook.com/dhtn567)
 - **Youtube:** [youtube.com/@dhtn567](https://www.youtube.com/@dhtn567)
