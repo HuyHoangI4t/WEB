@@ -1,0 +1,53 @@
+----------------------------------------
+GIẢI THÍCH CHI TIẾT CÁC CHỨC NĂNG WEBSITE BỘ MÔN CÔNG NGHỆ THÔNG TIN
+----------------------------------------
+
+1. TRANG CHỦ (index.html)
+   - Hiển thị banner chào mừng, giới thiệu tổng quan về Bộ môn CNTT.
+   - Cung cấp menu điều hướng đến các trang/tiện ích chính: Giới thiệu, Tuyển sinh, Đào tạo, Bộ môn, Tiện ích, v.v.
+   - Có thanh tìm kiếm nổi bật, cho phép tìm kiếm toàn bộ nội dung website.
+
+2. MENU ĐIỀU HƯỚNG (Navigation)
+   - Menu đa cấp, hỗ trợ dropdown cho các mục có nhiều lựa chọn con.
+   - Tự động đánh dấu mục đang truy cập (active).
+   - Hỗ trợ giao diện mobile với menu trượt (mobile menu).
+
+3. TÌM KIẾM THÔNG MINH (Search)
+   - Khi nhập từ khóa, hệ thống sẽ tìm kiếm toàn bộ nội dung trên trang (trừ header/footer/nav).
+   - Kết quả tìm kiếm được bôi vàng từ khóa, hiển thị dạng lưới (grid) giống giao diện tin tức.
+   - Có nút "Quay lại" để trở về giao diện ban đầu.
+
+4. HIỂN THỊ TIN TỨC & HOẠT ĐỘNG (News/Department Corner)
+   - Các mục "Góc Bộ môn CNTT", "Tin tức" hiển thị danh sách các hoạt động, thành tích, sự kiện, thông báo mới nhất.
+   - Mỗi tin có hình ảnh, tiêu đề, mô tả ngắn, nguồn và liên kết "Xem thêm".
+
+5. CHATBOT TNU ASSISTANT
+   - Trợ lý ảo hỗ trợ hỏi đáp tự động về các vấn đề liên quan đến CNTT, tuyển sinh, đào tạo, tiện ích, liên hệ, v.v.
+   - Giao diện chuyên nghiệp, có thể mở/đóng, lưu lịch sử hội thoại, copy nội dung, gửi lại câu hỏi, đánh giá phản hồi.
+   - Dữ liệu chatbot mở rộng dễ dàng qua file knowledgeBase.js hoặc data.js.
+
+6. GIAO DIỆN RESPONSIVE
+   - Tối ưu hiển thị trên mọi thiết bị: desktop, tablet, mobile.
+   - Menu, lưới tin tức, chatbot đều tự động điều chỉnh phù hợp kích thước màn hình.
+
+7. TÍCH HỢP MẠNG XÃ HỘI & LIÊN HỆ
+   - Footer hiển thị thông tin liên hệ, địa chỉ, email, liên kết Facebook, Youtube.
+   - Có các liên kết nhanh đến các trang tiện ích như lịch thi, kết quả học tập, thời khóa biểu.
+
+8. HIỆU ỨNG & TRẢI NGHIỆM NGƯỜI DÙNG
+   - Hiệu ứng hover, chuyển động mượt mà cho menu, nút bấm, chatbot.
+   - Sử dụng icon Font Awesome, Google Fonts để tăng tính thẩm mỹ.
+   - Thanh cuộn đẹp cho khung chat, responsive image loading.
+
+9. QUẢN LÝ ẢNH & TÀI NGUYÊN
+   - Thư mục img/ chứa toàn bộ hình ảnh sử dụng trên web (logo, banner, tin tức, v.v.).
+   - Các file CSS tách biệt cho từng thành phần (giao diện chính, chatbot, footer...).
+
+10. DỄ DÀNG MỞ RỘNG & TUỲ BIẾN
+    - Có thể thêm mới tin tức, cập nhật nội dung, mở rộng chức năng chatbot, thay đổi giao diện chỉ bằng cách chỉnh sửa các file trong thư mục src/.
+
+----------------------------------------
+MỌI THẮC MẮC VUI LÒNG LIÊN HỆ:
+- Email: khoakhtncn@ttn.edu.vn
+- Website: https://www.ttn.edu.vn/index.php/bmktn/ktnbmtin
+----------------------------------------

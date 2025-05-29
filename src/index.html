@@ -118,20 +118,40 @@
             <div class="container">
                 <div class="sec-nav-links">
                     <a href="https://www.ttn.edu.vn/index.php/mthongbao/thongbao" class="sec-nav-link">
-                        <span class="icon"><i class="fa-solid fa-bell"></i></span> Thông báo
+                        <span class="icon"><i class="fa-solid fa-bell"></i></span>
+                        <span>Thông báo</span>
                     </a>
                     <a href="https://www.ttn.edu.vn/index.php/mthongbao/tintuc" class="sec-nav-link">
-                        <span class="icon"><i class="fa-solid fa-newspaper"></i></span> Tin tức
+                        <span class="icon"><i class="fa-solid fa-newspaper"></i></span>
+                        <span>Tin tức</span>
                     </a>
                     <a href="https://www.ttn.edu.vn/index.php/gioithieu" class="sec-nav-link">
-                        <span class="icon"><i class="fa-solid fa-circle-info"></i></span> Giới thiệu
+                        <span class="icon"><i class="fa-solid fa-circle-info"></i></span>
+                        <span>Giới thiệu</span>
                     </a>
                     <a href="https://www.ttn.edu.vn/index.php/nganhdt" class="sec-nav-link">
-                        <span class="icon"><i class="fa-solid fa-graduation-cap"></i></span> Đào tạo
+                        <span class="icon"><i class="fa-solid fa-graduation-cap"></i></span>
+                        <span>Đào tạo</span>
                     </a>
                     <a href="zalo://conversation?phone=0965164445" class="sec-nav-link">
-                        <span class="icon"><i class="fa-solid fa-phone"></i></span> Liên hệ
+                        <span class="icon"><i class="fa-solid fa-phone"></i></span>
+                        <span>Liên hệ</span>
                     </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide banner dưới secondary nav -->
+        <div class="slide-banner-container">
+            <div class="slide-banner" id="slideBanner">
+                <div class="slide-item active">
+                    <img src="/img/slide1.jpg" alt="Banner 1" />
+                </div>
+                <div class="slide-item">
+                    <img src="/img/slide2.jpg" alt="Banner 2" />
+                </div>
+                <div class="slide-item">
+                    <img src="/img/slide3.jpg" alt="Banner 3" />
                 </div>
             </div>
         </div>
@@ -339,8 +359,11 @@
             </div>
         </div>
     </div>
+    <!-- Nút cuộn lên đầu trang -->
+    <button id="scrollToTopBtn" title="Lên đầu trang" style="position:fixed;right:90px;bottom:12px;z-index:999;display:none;width:48px;height:48px;border-radius:50%;background:#545557;color:#fff;border:none;box-shadow:0 2px 8px #99ccff44;font-size:22px;cursor:pointer;transition:opacity 0.2s;">
+        <i class="fas fa-arrow-up"></i>
+    </button>
     <script src="script.js"></script>
     <script type="module" src="chatbot.js"></script>
 </body>
-
 </html>

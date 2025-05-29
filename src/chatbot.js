@@ -208,7 +208,7 @@ async function botReply(msg) {
   setTimeout(() => {
     if (typing) typing.remove();
     addMessage(answer, "bot");
-  }, 600);
+  }, 200);
 }
 
 // Xử lý gửi tin nhắn người dùng

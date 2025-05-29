@@ -252,4 +252,50 @@ document.addEventListener("DOMContentLoaded", () => {
   // Call on load and resize
   handleResponsiveImages()
   window.addEventListener("resize", handleResponsiveImages)
+
+  // Nút cuộn lên đầu trang (chỉ thực thi nếu tồn tại trong DOM)
+  const scrollBtn = document.getElementById('scrollToTopBtn');
+  if (scrollBtn) {
+    window.addEventListener('scroll', function () {
+      if (window.scrollY > 200) {
+        scrollBtn.style.display = 'block';
+      } else {
+        scrollBtn.style.display = 'none';
+      }
+    });
+    scrollBtn.onclick = function () {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+  }
+
+
+  const slides = document.querySelectorAll('.slide-banner .slide-item');
+  let currentSlide = 0;
+  let slideInterval;
+
+  function showSlide(idx) {
+    slides.forEach((slide, i) => {
+      slide.classList.toggle('active', i === idx);
+    });
+    currentSlide = idx;
+  }
+
+  function nextSlide() {
+    currentSlide = (currentSlide + 1) % slides.length;
+    showSlide(currentSlide);
+  }
+  function startSlideAuto() {
+    stopSlideAuto();
+    if (slides.length > 1) {
+      slideInterval = setInterval(nextSlide, 3000);
+    }
+  }
+  function stopSlideAuto() {
+    if (slideInterval) clearInterval(slideInterval);
+  }
+
+  if (slides.length > 0) {
+    showSlide(currentSlide);
+    startSlideAuto();
+  }
 })
